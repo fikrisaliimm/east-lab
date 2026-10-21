@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Publications — Ganjar Fadillah</title>
+<link rel="stylesheet" href="gaya.css">
+<style>
+  .subjalur{
+    display:flex; align-items:baseline; gap:14px; flex-wrap:wrap;
+    padding:38px 0 8px; border-bottom:1px solid var(--garis-tua); margin-bottom:0;
+  }
+  .subjalur h3{
+    margin:0; font-size:clamp(17px,2vw,21px); font-weight:700; letter-spacing:-.015em;
+  }
+  .subjalur .en{
+    font-family:var(--mono); font-size:10.5px; font-weight:400;
+    letter-spacing:.11em; text-transform:uppercase; color:var(--redup);
+  }
+  .subjalur .jml{
+    margin-left:auto; font-family:var(--mono); font-size:11px;
+    color:var(--redup); white-space:nowrap; letter-spacing:.04em;
+  }
+  .saring{
+    display:flex; gap:14px; flex-wrap:wrap; align-items:center;
+    padding:14px 0 0;
+  }
+  .saring input{
+    flex:1 1 280px; min-height:46px; padding:10px 14px 10px 38px;
+    font:inherit; font-size:14.5px;
+    border:1px solid var(--garis); border-radius:0; background:#fff; color:inherit;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none' stroke='%235C6169' stroke-width='1.6'><circle cx='7' cy='7' r='4.6'/><path d='M10.6 10.6L14 14'/></svg>");
+    background-repeat:no-repeat; background-position:13px 50%;
+  }
+  .saring input:focus{outline:2px solid var(--biru); outline-offset:1px; border-color:var(--biru)}
+  .saring input::placeholder{color:#9AA0A8}
+  .saring .ket{
+    font-family:var(--mono); font-size:11px; color:var(--redup);
+    letter-spacing:.03em;
+  }
+  .kosong2{
+    padding:16px 0; font-size:14px; color:var(--redup);
+    background:none; border-bottom:1px solid var(--garis);
+  }
+</style>
+</head>
+<body>
+
+<header class="kepala">
+  <div class="wadah">
+    <p class="afiliasi">Universitas Islam Indonesia &middot; Fakultas Matematika dan Ilmu Pengetahuan Alam</p>
+    <h1>Ganjar Fadillah</h1>
+    <p class="latin">S.Si., M.Si., Ph.D.</p>
+  </div>
+</header>
+
+<nav>
+  <div class="wadah">
+    <a href="index.html">Beranda</a>
+    <a href="publikasi.html" class="ini">Publikasi</a>
+    <a href="profil.html">Profil</a>
+    <a href="akses.html">Kontak</a>
+  </div>
+</nav>
+
+<main class="wadah">
+
+  <div class="jalur">
+    <h2>Rekam jejak</h2>
+  </div>
+
+  <div class="subnav">
+    <a href="#terpilih">Publikasi terpilih<span>terpilih</span></a>
+    <a href="#artikel">Artikel<span>jurnal</span></a>
+    <a href="#buku">Buku<span>buku</span></a>
+    <a href="#prosiding">Prosiding<span>konferensi</span></a>
+    <a href="#paten">Paten<span>paten</span></a>
+    <a href="#ceramah">Ceramah undangan<span>undangan</span></a>
+    <a href="#hibah">Hibah riset<span>hibah</span></a>
+  </div>
+
+  <div class="luar">
+    <p class="ket">Profil di tempat lain</p>
+    <a href="https://scholar.google.com/citations?user=&hl=en&view_op=search_authors&mauthors=Ganjar+Fadillah" target="_blank" rel="noopener">Google Scholar</a>
+    <a href="https://sinta.kemdikbud.go.id/authors?q=Ganjar+Fadillah" target="_blank" rel="noopener">SINTA</a>
+    <a href="https://www.scopus.com/authid/detail.uri?authorId=57200947700" target="_blank" rel="noopener">Scopus</a>
+    <a href="https://openalex.org/A5026624986" target="_blank" rel="noopener">OpenAlex</a>
+  </div>
+
+  <div class="catatan">
+    <p>Klik judul untuk membuka halaman penerbit. Daftar terpilih diambil dari artikel
+      di bawahnya, diurutkan menurut jumlah sitasi.</p>
+  </div>
+
+  <div class="saring">
+    <input type="search" id="cari" placeholder="Cari judul, penulis, jurnal…" aria-label="Cari publikasi">
+    <span class="ket" id="ket"></span>
+  </div>
+
+  <section id="terpilih">
+    <div class="subjalur">
+      <h3>Publikasi terpilih</h3><span class="en">urut sitasi</span>
+      <span class="jml" id="j-terpilih"></span>
+    </div>
+    <ul class="daftar rangking" id="d-terpilih"></ul>
+  </section>
+
+  <section id="artikel">
+    <div class="subjalur">
+      <h3>Artikel jurnal</h3><span class="en">jurnal</span>
+      <span class="jml" id="j-artikel"></span>
+    </div>
+    <ul class="daftar" id="d-artikel"></ul>
+  </section>
+
+  <section id="buku">
+    <div class="subjalur">
+      <h3>Buku dan bab buku</h3><span class="en">buku</span>
+      <span class="jml" id="j-buku"></span>
+    </div>
+    <ul class="daftar" id="d-buku"></ul>
+  </section>
+
+  <section id="prosiding">
+    <div class="subjalur">
+      <h3>Prosiding konferensi</h3><span class="en">konferensi</span>
+      <span class="jml" id="j-prosiding"></span>
+    </div>
+    <ul class="daftar" id="d-prosiding"></ul>
+  </section>
+
+  <section id="lain">
+    <div class="subjalur">
+      <h3>Terbitan lain</h3><span class="en">lain</span>
+      <span class="jml" id="j-lain"></span>
+    </div>
+    <ul class="daftar" id="d-lain"></ul>
+  </section>
+
+  <section id="paten">
+    <div class="subjalur">
+      <h3>Paten</h3><span class="en">paten</span>
+    </div>
+    <p class="kosong2">Belum ada paten terdaftar atas nama penulis pada sumber data yang dipakai
+      (OpenAlex dan laman resmi Jurusan Kimia UII). Bagian ini sengaja dibiarkan kosong,
+      bukan dikarang. Kirimkan nomor pendaftaran bila sudah ada, akan diisi di sini.</p>
+  </section>
+
+  <section id="ceramah">
+    <div class="subjalur">
+      <h3>Ceramah undangan</h3><span class="en">undangan</span>
+    </div>
+    <p class="kosong2">Data ceramah undangan belum tersedia pada sumber terbuka. Bila ada daftar
+      sendiri, kirimkan dan akan dimasukkan ke sini.</p>
+  </section>
+
+  <section id="hibah">
+    <div class="subjalur">
+      <h3>Hibah riset</h3><span class="en">hibah</span>
+      <span class="jml">8 catatan</span>
+    </div>
+    <div class="daftar" style="list-style:none">
+      <div class="baris"><span class="waktu">2020</span><span class="apa">Advanced material for environmental and energy application<span class="anak">World Class Professor — RISTEK DIKTI &middot; peneliti</span></span></div>
+      <div class="baris"><span class="waktu">2020</span><span class="apa">Pengembangan dan fabrikasi membran 3D berbasis graphene oxide/hidrogel untuk desinfeksi air minum dan pengolahan limbah industri<span class="anak">DPPM UII &middot; peneliti</span></span></div>
+      <div class="baris"><span class="waktu">2019–2020</span><span class="apa">Development of electrochemical sensor for eugenol based on GO/SnO₂<span class="anak">DPPM UII &middot; ketua</span></span></div>
+      <div class="baris"><span class="waktu">2018–2019</span><span class="apa">The combined techniques of electrochemical-adsorption for removal synthetic dye<span class="anak">Metrohm Indonesia &middot; ketua</span></span></div>
+      <div class="baris"><span class="waktu">2017–2018</span><span class="apa">Electrochemical preparation of molecularly imprinted polymers on carbon paste electrode for determination of antioxidant and antibiotics<span class="anak">LPDP Thesis &middot; ketua</span></span></div>
+      <div class="baris"><span class="waktu">2016–2018</span><span class="apa">Development of electrochemical sensor based on MIPs for BHA analysis<span class="anak">Grant ITB &middot; ketua</span></span></div>
+      <div class="baris"><span class="waktu">2014–2015</span><span class="apa">Copigmentation of natural dyes anthocyanins as natural dye in DSSC<span class="anak">PKM DIKTI &middot; peneliti</span></span></div>
+      <div class="baris"><span class="waktu">2013–2014</span><span class="apa">Effectiveness of nanofertilizer based on APTMS-zeolite as slow release fertilizer system<span class="anak">PKM DIKTI &middot; peneliti</span></span></div>
+    </div>
+  </section>
+
+  <p style="font-size:12.5px; color:#555; padding:18px 0 30px; margin:0">
+    Sumber: OpenAlex dan laman resmi Jurusan Kimia serta Program Studi D3 Analisis Kimia UII.
+    <span id="meta-bawah"></span>
+  </p>
+
+</main>
+
+<footer>
+  <div class="wadah">
+    <span>&copy; 2026 Ganjar Fadillah &middot; Universitas Islam Indonesia</span>
+    <span>Data publikasi: OpenAlex &amp; laman resmi UII</span>
+  </div>
+</footer>
+
+<script src="data.js"></script>
+<script>
+const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g,
+  c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+const BULAN = ['Januari','Februari','Maret','April','Mei','Juni','Juli',
+               'Agustus','September','Oktober','November','Desember'];
+const tglID = iso => { if (!iso) return '—'; const [y,m,d] = iso.split('-');
+  return `${Number(d)} ${BULAN[Number(m)-1]} ${y}`; };
+
+function baris(w, ke){
+  const judul = w.d
+    ? `<a href="https://doi.org/${esc(w.d)}" target="_blank" rel="noopener">${esc(w.j)}</a>`
+    : esc(w.j);
+  const terbit = w.v ? `${esc(w.v)} (${esc(w.t)})` : `(${esc(w.t)})`;
+  /* daftar terpilih: kolom kiri = peringkat sitasi, bukan tahun */
+  const kiri = ke === 'rangking'
+    ? `<span class="thn" title="${esc(w.s)} sitasi"><b>${esc(w.s)}</b><i>sitasi</i></span>`
+    : `<span class="thn">${esc(w.t)}</span>`;
+  return `<li data-cari="${esc((w.j+' '+w.p+' '+w.v+' '+w.t).toLowerCase())}">
+    ${kiri}
+    <p class="p">${esc(w.p)}</p>
+    <p class="j">${judul}</p>
+    <p class="v">${terbit}${w.d ? `<a class="doi-t" href="https://doi.org/${esc(w.d)}" target="_blank" rel="noopener">${esc(w.d)}</a>` : ''}</p>
+  </li>`;
+}
+
+function isi(idDaftar, idJml, arr, ke){
+  const ul = document.getElementById(idDaftar);
+  const jm = document.getElementById(idJml);
+  ul.innerHTML = arr.length ? arr.map(w => baris(w, ke)).join('')
+    : '<li class="kosong2">Tidak ada data pada kelompok ini.</li>';
+  if (jm) jm.textContent = arr.length + ' entri';
+  return arr.length;
+}
+
+const total = {
+  terpilih: isi('d-terpilih','j-terpilih', KARYA.terpilih, 'rangking'),
+  artikel: isi('d-artikel','j-artikel', KARYA.artikel),
+  prosiding: isi('d-prosiding','j-prosiding', KARYA.prosiding),
+  buku: isi('d-buku','j-buku', KARYA.bab),
+  lain: isi('d-lain','j-lain', KARYA.lain),
+};
+
+/* saringan: menyembunyikan entri yang tak cocok, semua bagian sekaligus */
+const cari = document.getElementById('cari');
+const ket = document.getElementById('ket');
+const unik = () => document.querySelectorAll('#d-artikel li[data-cari], #d-prosiding li[data-cari], #d-buku li[data-cari], #d-lain li[data-cari]');
+cari.addEventListener('input', () => {
+  const s = cari.value.trim().toLowerCase();
+  let tampil = 0, semua = 0;
+  unik().forEach(li => {
+    semua++;
+    const cocok = !s || li.dataset.cari.includes(s);
+    li.style.display = cocok ? '' : 'none';
+    if (cocok) tampil++;
+  });
+  document.querySelectorAll('#d-terpilih li[data-cari]').forEach(li => {
+    li.style.display = (!s || li.dataset.cari.includes(s)) ? '' : 'none';
+  });
+  const lain = [...document.querySelectorAll('#d-terpilih li[data-cari]')]
+    .filter(li => !s || li.dataset.cari.includes(s)).length;
+  ket.textContent = s
+    ? `${tampil} dari ${semua} entri cocok, +${lain} di daftar terpilih`
+    : `${semua} entri`;
+});
+ket.textContent = `${unik().length} entri`;
+if (typeof KARYA !== 'undefined' && KARYA.meta) {
+  const m = KARYA.meta;
+  const el = document.getElementById('meta-bawah');
+  if (el) el.textContent = `Tercatat ${m.jumlah} karya dan ${String(m.sitasi).replace(/\B(?=(\d{3})+(?!\d))/g,'.')} sitasi `
+    + `per ${tglID(m.diambil)}. Angka sitasi berubah mengikuti sumber.`;
+}
+</script>
+</body>
+</html>
