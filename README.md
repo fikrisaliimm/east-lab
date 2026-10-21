@@ -18,25 +18,48 @@ Data publikasi ditarik otomatis dari OpenAlex oleh GitHub Actions.
 
 ## Cara memasang di GitHub Pages
 
-1. Buat repo **publik** di GitHub, misal `profil-ganjar`.
-2. Unggah seluruh isi folder ini (termasuk folder `.github` dan `tools`).
-   Lewat web: **Add file → Upload files**, seret semua, Commit.
-   Berkas tersembunyi `.github` harus ikut — kalau lewat seret di Windows Explorer,
-   aktifkan dulu "Hidden items", atau pakai git di bawah.
-3. **Settings → Pages** → Source: *Deploy from a branch* → Branch: `main`, folder `/ (root)` → Save.
-4. Tunggu 1–2 menit. Alamat: `https://<namapengguna>.github.io/profil-ganjar/`
+Folder ini **sudah berupa repo git** (branch `main`, 5 commit). Yang belum ada
+hanya alamat remote. Jadi ada dua jalan.
 
-### Lewat git (lebih rapi)
+### Jalan A — lewat git (dianjurkan)
+
+1. Buat repo **baru dan publik** di GitHub. Nama bebas, misal `profil-ganjar`.
+   **Jangan** centang "Add a README", "Add .gitignore", atau "Choose a license" —
+   nanti push ditolak karena riwayatnya bentrok. Biarkan kosong.
+2. Jalankan:
 
 ```bash
 cd "D:/Website/Profil-Ganjar"
-git init
-git add .
-git commit -m "Profil Ganjar Fadillah"
-git branch -M main
 git remote add origin https://github.com/<namapengguna>/profil-ganjar.git
 git push -u origin main
 ```
+
+3. Saat diminta, masuk lewat peramban (Git Credential Manager sudah aktif di
+   mesin ini). Kalau muncul pilihan, pilih **sign in with your browser** —
+   jangan menempel kata sandi akun, itu sudah tidak dipakai GitHub.
+4. **Settings → Pages** → *Build and deployment* → Source: **Deploy from a branch**
+   → Branch: `main`, folder `/ (root)` → **Save**.
+5. Tunggu 1–2 menit, muat ulang halaman itu sampai muncul kotak
+   "Your site is live at …". Alamat: `https://<namapengguna>.github.io/profil-ganjar/`
+
+### Jalan B — lewat peramban saja (tanpa git)
+
+1. Buat repo publik kosong seperti di atas.
+2. **Add file → Upload files**, seret semua isi folder.
+3. Yang sering terlewat: folder `.github` (berisi workflow). Windows Explorer
+   menyembunyikannya — aktifkan **View → Show → Hidden items** dulu, atau
+   unggah `.github/workflows/perbarui.yml` terpisah lewat
+   **Add file → Create new file**, ketik nama `/.github/workflows/perbarui.yml`.
+4. Commit, lalu lakukan langkah 4–5 di atas.
+
+### Kalau halaman 404
+
+- Pastikan repo **publik**. Pages gratis tidak aktif di repo privat.
+- Pastikan berkas ada di **akar** repo (`index.html` sejajar `README.md`),
+  bukan di dalam subfolder.
+- Alamat harus diakhiri garis miring: `.../profil-ganjar/` — tanpa itu kadang 404.
+- Butuh sampai 10 menit pada pemuatan pertama.
+
 
 ## Membuat data ikut memperbarui sendiri
 

@@ -38,6 +38,7 @@
     font-family:var(--mono); font-size:11px; color:var(--redup);
     letter-spacing:.03em;
   }
+  .bintang{color:#A31515; font-weight:700}
   .kosong2{
     padding:16px 0; font-size:14px; color:var(--redup);
     background:none; border-bottom:1px solid var(--garis);
@@ -48,18 +49,24 @@
 
 <header class="kepala">
   <div class="wadah">
-    <p class="afiliasi">Universitas Islam Indonesia &middot; Fakultas Matematika dan Ilmu Pengetahuan Alam</p>
-    <h1>Ganjar Fadillah</h1>
-    <p class="latin">S.Si., M.Si., Ph.D.</p>
+    <div class="teks">
+      <p class="afiliasi">Universitas Islam Indonesia &middot; Fakultas Matematika dan Ilmu Pengetahuan Alam</p>
+      <h1>Ganjar Fadillah</h1>
+      <p class="latin">S.Si., M.Si., Ph.D.</p>
+    </div>
+    <div class="potret"><img src="foto-kecil.jpg" alt="" width="420" height="525" aria-hidden="true"></div>
   </div>
 </header>
 
 <nav>
   <div class="wadah">
-    <a href="index.html">Beranda</a>
-    <a href="publikasi.html" class="ini">Publikasi</a>
-    <a href="profil.html">Profil</a>
-    <a href="akses.html">Kontak</a>
+    <span class="merek"><b>GF</b>Ganjar Fadillah</span>
+    <div class="tautan">
+      <a href="index.html">Beranda</a>
+      <a href="publikasi.html" class="ini">Publikasi</a>
+      <a href="profil.html">Profil</a>
+      <a href="akses.html">Kontak</a>
+    </div>
   </div>
 </nav>
 
@@ -70,13 +77,13 @@
   </div>
 
   <div class="subnav">
-    <a href="#terpilih">Publikasi terpilih<span>terpilih</span></a>
-    <a href="#artikel">Artikel<span>jurnal</span></a>
-    <a href="#buku">Buku<span>buku</span></a>
-    <a href="#prosiding">Prosiding<span>konferensi</span></a>
-    <a href="#paten">Paten<span>paten</span></a>
-    <a href="#ceramah">Ceramah undangan<span>undangan</span></a>
-    <a href="#hibah">Hibah riset<span>hibah</span></a>
+    <a href="#terpilih">Publikasi terpilih<span>Selected publications</span></a>
+    <a href="#artikel">Artikel<span>Journal articles</span></a>
+    <a href="#buku">Buku<span>Book chapters</span></a>
+    <a href="#prosiding">Prosiding<span>Proceedings</span></a>
+    <a href="#paten">Paten<span>Patents</span></a>
+    <a href="#ceramah">Ceramah undangan<span>Invited lectures</span></a>
+    <a href="#hibah">Hibah riset<span>Research grants</span></a>
   </div>
 
   <div class="luar">
@@ -89,17 +96,18 @@
 
   <div class="catatan">
     <p>Klik judul untuk membuka halaman penerbit. Daftar terpilih diambil dari artikel
-      di bawahnya, diurutkan menurut jumlah sitasi.</p>
+      di bawahnya, diurutkan menurut jumlah sitasi. Tanda <span class="bintang">*</span>
+      menandai penulis korespondensi.</p>
   </div>
 
   <div class="saring">
     <input type="search" id="cari" placeholder="Cari judul, penulis, jurnal…" aria-label="Cari publikasi">
-    <span class="ket" id="ket"></span>
+    <span class="ket" id="ket" aria-live="polite"></span>
   </div>
 
   <section id="terpilih">
     <div class="subjalur">
-      <h3>Publikasi terpilih</h3><span class="en">urut sitasi</span>
+      <h3>Publikasi terpilih</h3>
       <span class="jml" id="j-terpilih"></span>
     </div>
     <ul class="daftar rangking" id="d-terpilih"></ul>
@@ -107,7 +115,7 @@
 
   <section id="artikel">
     <div class="subjalur">
-      <h3>Artikel jurnal</h3><span class="en">jurnal</span>
+      <h3>Artikel jurnal</h3>
       <span class="jml" id="j-artikel"></span>
     </div>
     <ul class="daftar" id="d-artikel"></ul>
@@ -115,7 +123,7 @@
 
   <section id="buku">
     <div class="subjalur">
-      <h3>Buku dan bab buku</h3><span class="en">buku</span>
+      <h3>Buku dan bab buku</h3>
       <span class="jml" id="j-buku"></span>
     </div>
     <ul class="daftar" id="d-buku"></ul>
@@ -123,7 +131,7 @@
 
   <section id="prosiding">
     <div class="subjalur">
-      <h3>Prosiding konferensi</h3><span class="en">konferensi</span>
+      <h3>Prosiding konferensi</h3>
       <span class="jml" id="j-prosiding"></span>
     </div>
     <ul class="daftar" id="d-prosiding"></ul>
@@ -131,7 +139,7 @@
 
   <section id="lain">
     <div class="subjalur">
-      <h3>Terbitan lain</h3><span class="en">lain</span>
+      <h3>Terbitan lain</h3>
       <span class="jml" id="j-lain"></span>
     </div>
     <ul class="daftar" id="d-lain"></ul>
@@ -139,7 +147,7 @@
 
   <section id="paten">
     <div class="subjalur">
-      <h3>Paten</h3><span class="en">paten</span>
+      <h3>Paten</h3>
     </div>
     <p class="kosong2">Belum ada paten terdaftar atas nama penulis pada sumber data yang dipakai
       (OpenAlex dan laman resmi Jurusan Kimia UII). Bagian ini sengaja dibiarkan kosong,
@@ -148,7 +156,7 @@
 
   <section id="ceramah">
     <div class="subjalur">
-      <h3>Ceramah undangan</h3><span class="en">undangan</span>
+      <h3>Ceramah undangan</h3>
     </div>
     <p class="kosong2">Data ceramah undangan belum tersedia pada sumber terbuka. Bila ada daftar
       sendiri, kirimkan dan akan dimasukkan ke sini.</p>
@@ -156,7 +164,7 @@
 
   <section id="hibah">
     <div class="subjalur">
-      <h3>Hibah riset</h3><span class="en">hibah</span>
+      <h3>Hibah riset</h3>
       <span class="jml">8 catatan</span>
     </div>
     <div class="daftar" style="list-style:none">
@@ -248,10 +256,10 @@ cari.addEventListener('input', () => {
   const lain = [...document.querySelectorAll('#d-terpilih li[data-cari]')]
     .filter(li => !s || li.dataset.cari.includes(s)).length;
   ket.textContent = s
-    ? `${tampil} dari ${semua} entri cocok, +${lain} di daftar terpilih`
-    : `${semua} entri`;
+    ? `${tampil} dari ${semua} karya cocok, +${lain} di daftar terpilih`
+    : `${semua} karya`;
 });
-ket.textContent = `${unik().length} entri`;
+ket.textContent = `${unik().length} karya`;
 if (typeof KARYA !== 'undefined' && KARYA.meta) {
   const m = KARYA.meta;
   const el = document.getElementById('meta-bawah');
