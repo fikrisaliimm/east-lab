@@ -34,11 +34,17 @@ a:hover{text-decoration:underline; text-underline-offset:3px; text-decoration-th
   background:var(--navy); color:var(--kertas);
   border-bottom:3px solid var(--emas);
 }
-/* garis-garis tipis tegak: tekstur kertas berpetak, bukan gradien */
+/* foto gedung lab: sumber sama di keempat halaman, framing sama */
 .kepala::before{
   content:""; position:absolute; inset:0; pointer-events:none;
-  background-image:repeating-linear-gradient(90deg,
-    rgba(255,255,255,.055) 0 1px, transparent 1px 96px);
+  background:url("header.jpg") 50% 50%/cover no-repeat;
+}
+/* scrim: kiri gelap supaya teks putih terbaca, kanan foto tetap terlihat */
+.kepala::after{
+  content:""; position:absolute; inset:0; pointer-events:none;
+  background:linear-gradient(96deg,
+    rgba(4,26,60,.94) 0%, rgba(5,34,78,.90) 34%,
+    rgba(6,40,92,.82) 54%, rgba(6,40,92,.52) 78%, rgba(6,40,92,.34) 100%);
 }
 .kepala .wadah{
   position:relative; z-index:2;
@@ -60,13 +66,20 @@ a:hover{text-decoration:underline; text-underline-offset:3px; text-decoration-th
   margin:14px 0 0; font-size:clamp(13px,1.4vw,15px); font-weight:600;
   color:var(--emas); letter-spacing:.02em;
 }
-.kepala .potret{
-  flex:0 0 auto; width:clamp(88px,9vw,112px); aspect-ratio:4/5;
-  overflow:hidden; border-left:2px solid var(--emas);
+
+.kepala .meta{
+  flex:0 0 auto; align-self:stretch; display:flex; flex-direction:column;
+  justify-content:flex-end; text-align:right; max-width:34ch;
+  padding-left:24px; border-left:1px solid rgba(255,255,255,.26);
 }
-.kepala .potret img{
-  display:block; width:100%; height:100%; object-fit:cover; object-position:50% 20%;
+.kepala .meta p{
+  margin:0 0 3px; font-family:var(--mono); font-size:11.5px;
+  line-height:1.7; letter-spacing:.01em; color:#EDF1F8;
+  text-shadow:0 1px 3px rgba(2,12,30,.85);
 }
+.kepala .meta p:last-child{margin-bottom:0; color:#AEBBD4}
+.kepala .meta a{color:#D7E0F0; box-shadow:inset 0 -1px 0 rgba(255,255,255,.28)}
+.kepala .meta a:hover{color:#fff; box-shadow:inset 0 -1px 0 var(--emas)}
 
 /* ── nav: merek kiri, tautan kanan, garis emas saat aktif ─── */
 nav{
@@ -132,7 +145,7 @@ nav a.ini::after{transform:scaleX(1)}
 
 /* ── sub-nav dua bahasa ───────────────────────────────────── */
 .subnav{
-  display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:0 18px;
+  display:grid; grid-template-columns:repeat(8,minmax(0,1fr)); gap:0 18px;
   border-bottom:1px solid var(--garis-tua); margin:16px 0 0;
 }
 .subnav a{
@@ -238,6 +251,12 @@ nav a.ini::after{transform:scaleX(1)}
 .daftar .v .doi-t:hover{color:var(--navy); box-shadow:inset 0 -1px 0 var(--navy); text-decoration:none}
 .daftar .kosong2{grid-column:1/-1}
 
+/* catatan kaki bagian: teks kecil harus tetap lolos kontras */
+p.kosong2{
+  font-size:12.5px; color:var(--redup); line-height:1.7;
+  margin:12px 0 0; padding:0 0 26px;
+}
+
 /* ── profil ───────────────────────────────────────────────── */
 .profil{
   display:grid; grid-template-columns:minmax(230px,320px) 1fr; gap:56px;
@@ -269,14 +288,22 @@ nav a.ini::after{transform:scaleX(1)}
   margin:0 0 20px; font-size:13px; font-weight:700; letter-spacing:.07em;
   text-transform:uppercase; color:var(--redup);
 }
+/* golongan pangkat ditulis apa adanya: III/c, bukan III/C */
+.profil .iden .nama-id .gol{text-transform:none; letter-spacing:0}
 .profil .iden p{margin:0 0 3px; font-size:16.5px; color:#212429}
 .profil .iden .af{font-size:16.5px; font-weight:600; margin-top:16px; color:var(--tinta)}
 .profil .iden .kecil{
   font-size:13.5px; color:var(--redup); margin-top:22px;
   padding-top:16px; border-top:1px solid var(--garis);
 }
-.profil .iden .kecil a{box-shadow:inset 0 -1px 0 var(--garis)}
+.profil .iden .kecil a{
+  box-shadow:inset 0 -1px 0 var(--garis); white-space:nowrap;
+}
 .profil .iden .kecil a:hover{box-shadow:inset 0 -1px 0 var(--navy); text-decoration:none}
+/* baris ID peneliti: rapat, tapi bisa turun baris utuh tanpa memotong angka */
+.profil .iden .id-peneliti{display:flex; flex-wrap:wrap; gap:2px 14px; margin-top:10px}
+.profil .iden .id-peneliti span{white-space:nowrap; color:var(--redup); font-size:13.5px}
+.profil .iden .id-peneliti a{font-variant-numeric:tabular-nums}
 
 .tautan-bagian{
   display:flex; justify-content:flex-start; gap:8px; flex-wrap:wrap;
@@ -361,7 +388,7 @@ footer span:last-child{color:#9DB0CE}
 .akses .dalam a:hover{box-shadow:inset 0 -1px 0 var(--navy); text-decoration:none}
 
 @media (max-width:980px){
-  .kepala .potret{display:none}
+  .kepala .meta{display:none}
   .profil{grid-template-columns:1fr; gap:28px}
   .profil .foto{position:static; max-width:320px}
   .baris{grid-template-columns:1fr; gap:4px}
@@ -401,6 +428,11 @@ footer span:last-child{color:#9DB0CE}
   .profil .iden p,.profil .iden .af{font-size:15.5px}
   .baris{padding:11px 0; font-size:15px}
   .tautan-bagian a{padding:7px 11px; font-size:12.5px}
+  /* tautan di dalam paragraf: area sentuh dinaikkan tanpa merusak alur teks */
+  .profil .iden .kecil a, .akses a[href^="mailto"], .akses .dalam p a{display:inline-block; padding:14px 0}
+  .profil .iden .id-peneliti{gap:0 14px}
+  .profil .iden .id-peneliti span{line-height:1.9}
+  .catatan a{display:inline-block; padding:14px 0}
 }
 
 @media (prefers-reduced-motion:reduce){

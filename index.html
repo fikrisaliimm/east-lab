@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Ganjar Fadillah — Universitas Islam Indonesia</title>
-<link rel="stylesheet" href="gaya.css">
+<link rel="stylesheet" href="gaya.css?v=7cfbcd5b">
 </head>
 <body>
 
@@ -15,7 +15,11 @@
       <h1>Ganjar Fadillah</h1>
       <p class="latin">S.Si., M.Si., Ph.D.</p>
     </div>
-    <div class="potret"><img src="foto-kecil.jpg" alt="" width="420" height="525" aria-hidden="true"></div>
+    <div class="meta">
+      <p>Elektroanalitik dan fotoelektrokimia</p>
+      <p><a href="mailto:ganjar.fadillah@uii.ac.id">ganjar.fadillah@uii.ac.id</a></p>
+      <p>Scopus ID &middot; 57127299100</p>
+    </div>
   </div>
 </header>
 
@@ -34,15 +38,15 @@
 <main class="wadah">
 
   <p class="pengantar">
-    Bekerja pada kimia analitik dan elektroanalitik &mdash; sensor dan biosensor berbasis
-    material nano, pengolahan air dan limbah secara elektrokimia, serta pemisahan ion lewat
-    membran. Mengajar di Jurusan Kimia dan Program Studi D3 Analisis Kimia.
+    Bekerja pada elektroanalitik dan fotoelektrokimia &mdash; sensor kimia berbasis material
+    nano, pemisahan ion lewat membran tercetak molekul, dan pengolahan air secara
+    elektrokimia. Mengajar di Program Studi Analisis Kimia, Fakultas MIPA.
   </p>
 
   <div class="statistik" id="statistik" aria-label="Ringkasan angka">
-    <div><span class="angka" id="s-karya">—</span><span class="label">karya</span></div>
-    <div><span class="angka" id="s-sitasi">—</span><span class="label">sitasi</span></div>
-    <div><span class="angka" id="s-h">—</span><span class="label">h-index</span></div>
+    <div><span class="angka" id="s-karya">—</span><span class="label">karya tercantum</span></div>
+    <div><span class="angka" id="s-q1">—</span><span class="label">di jurnal Q1</span></div>
+    <div><span class="angka" id="s-h">27</span><span class="label">h-index Scopus</span></div>
     <div><span class="angka" id="s-tahun">—</span><span class="label">terbitan terakhir</span></div>
   </div>
 
@@ -59,55 +63,47 @@
 <footer>
   <div class="wadah">
     <span>&copy; 2026 Ganjar Fadillah &middot; Universitas Islam Indonesia</span>
-    <span id="sumber">Data publikasi: OpenAlex</span>
+    <span id="sumber">Data: daftar riwayat hidup</span>
   </div>
 </footer>
 
-<script src="data.js"></script>
+<script src="data.js?v=7cfbcd5b"></script>
 <script>
-/* Kabar non-publikasi. Publikasi terbaru diambil otomatis dari data.js. */
+/* Kabar non-publikasi. Publikasi terbaru diambil dari data.js, yang isinya
+   disalin dari daftar riwayat hidup — bukan tarikan basis data otomatis. */
 const KEGIATAN = [
-  {tgl:'2025-09-20', jenis:'Pengakuan',
-   isi:'Masuk daftar <b>Top 2% Scientists</b> dunia versi Stanford University &amp; Elsevier, kategori <i>single year impact</i> — ketiga kalinya berturut-turut sejak 2023.'}
+  {tahun:'2023–2026', jenis:'Pengakuan',
+   isi:'Masuk daftar <b>Top 2% Scientist</b> versi Elsevier dan Stanford University, ' +
+       'kategori <i>single year impact</i>.'},
+  {tahun:'2025', jenis:'Penghargaan',
+   isi:'<b>Best Poster</b> pada konferensi ASIANALYSIS, dari The Japan Society for Analytical Chemistry.'},
+  {tahun:'2023', jenis:'Penghargaan',
+   isi:'<b>Kyushu Analytical Chemistry Award for Young Researchers</b>, dari The Japan Society for Analytical Chemistry.'}
 ];
 
 const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g,
   c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 
-const angka = n => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-
-/* 2026-07-30 -> 30 Juli 2026 */
-const BULAN = ['Januari','Februari','Maret','April','Mei','Juni','Juli',
-               'Agustus','September','Oktober','November','Desember'];
-function tglPanjang(iso){
-  if (!iso) return '';
-  const [y, m, d] = iso.split('-');
-  return `${Number(d)} ${BULAN[Number(m) - 1]} ${y}`;
-}
-
-const JUDUL_JENIS = {
-  'article': 'Artikel', 'review': 'Artikel', 'preprint': 'Pracetak',
-  'conference-paper': 'Prosiding', 'book-chapter': 'Bab buku'
-};
+const JUDUL_Q = { 'Q1': 'Artikel Q1', 'Q2': 'Artikel Q2', 'Q3': 'Artikel Q3',
+                  'Prosiding': 'Prosiding' };
 
 function barisKabar(w){
   const judul = w.d
     ? `<a href="https://doi.org/${esc(w.d)}" target="_blank" rel="noopener">${esc(w.j)}</a>`
     : esc(w.j);
-  const jenis = JUDUL_JENIS[w.jenis] || 'Terbitan';
   return `<li>
-    <span class="tgl">${esc(tglPanjang(w.tgl))}</span>
+    <span class="tgl">${esc(w.t)}</span>
     <span class="badan">
-      <span class="jenis">${esc(jenis)}</span>
+      <span class="jenis">${esc(JUDUL_Q[w.q] || 'Terbitan')}</span>
       <span class="judul">${judul}</span>
-      <span class="terbitan">${esc(w.v)}${w.t ? ` &middot; ${esc(w.t)}` : ''}</span>
+      <span class="terbitan">${esc(w.v)}</span>
     </span>
   </li>`;
 }
 
 function barisKegiatan(k){
   return `<li class="kegiatan">
-    <span class="tgl">${esc(tglPanjang(k.tgl))}</span>
+    <span class="tgl">${esc(k.tahun)}</span>
     <span class="badan">
       <span class="jenis">${esc(k.jenis)}</span>
       <span class="judul">${k.isi}</span>
@@ -118,19 +114,19 @@ function barisKegiatan(k){
 if (typeof KARYA === 'undefined') {
   document.getElementById('gariswaktu').textContent = 'data.js gagal dimuat';
 } else {
-  const terbit = (KARYA.terbaru || []).slice(0, 8).map(barisKabar);
-  document.getElementById('feed').innerHTML = [...terbit, ...KEGIATAN.map(barisKegiatan)].join('');
+  const terbit = (KARYA.terbaru || []).map(barisKabar);
+  document.getElementById('feed').innerHTML =
+    [...terbit, ...KEGIATAN.map(barisKegiatan)].join('');
+
+  document.getElementById('gariswaktu').innerHTML =
+    'Delapan terbitan terakhir dan tiga rekognisi. Daftar lengkapnya ada di halaman ' +
+    '<a href="publikasi.html">Publikasi</a>.';
 
   const m = KARYA.meta || {};
-  document.getElementById('gariswaktu').innerHTML =
-    `Daftar lengkapnya ada di halaman <a href="publikasi.html">Publikasi</a>. `
-    + `Diperbarui ${tglPanjang(m.diambil)}.`;
-  document.getElementById('sumber').textContent = 'Data publikasi: OpenAlex';
-
   const isi = (id, v) => { const e = document.getElementById(id); if (e) e.textContent = v; };
   isi('s-karya', m.jumlah ?? '—');
-  isi('s-sitasi', m.sitasi ? angka(m.sitasi) : '—');
-  isi('s-h', m.h ?? '—');
+  isi('s-q1', m.q1 ?? '—');
+  isi('s-h', m.h ?? 27);
   isi('s-tahun', m.terbit_terakhir ?? '—');
 }
 </script>

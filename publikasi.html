@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Publications — Ganjar Fadillah</title>
-<link rel="stylesheet" href="gaya.css">
+<title>Publikasi — Ganjar Fadillah</title>
+<link rel="stylesheet" href="gaya.css?v=7cfbcd5b">
 <style>
   .subjalur{
     display:flex; align-items:baseline; gap:14px; flex-wrap:wrap;
@@ -70,6 +70,10 @@
     padding:16px 0; font-size:14px; color:var(--redup);
     background:none; border-bottom:1px solid var(--garis);
   }
+  .q{
+    font-family:var(--mono); font-size:10.5px; letter-spacing:.08em;
+    color:var(--redup); margin-left:8px; white-space:nowrap;
+  }
 </style>
 </head>
 <body>
@@ -81,7 +85,11 @@
       <h1>Ganjar Fadillah</h1>
       <p class="latin">S.Si., M.Si., Ph.D.</p>
     </div>
-    <div class="potret"><img src="foto-kecil.jpg" alt="" width="420" height="525" aria-hidden="true"></div>
+    <div class="meta">
+      <p>Elektroanalitik dan fotoelektrokimia</p>
+      <p><a href="mailto:ganjar.fadillah@uii.ac.id">ganjar.fadillah@uii.ac.id</a></p>
+      <p>Scopus ID &middot; 57127299100</p>
+    </div>
   </div>
 </header>
 
@@ -104,27 +112,25 @@
   </div>
 
   <div class="subnav">
-    <a href="#terpilih">Publikasi terpilih<span>Selected publications</span></a>
-    <a href="#artikel">Artikel<span>Journal articles</span></a>
-    <a href="#buku">Buku<span>Book chapters</span></a>
+    <a href="#q1">Artikel Q1<span>Q1 articles</span></a>
+    <a href="#q2">Artikel Q2 dan Q3<span>Q2-Q3 articles</span></a>
     <a href="#prosiding">Prosiding<span>Proceedings</span></a>
-    <a href="#paten">Paten<span>Patents</span></a>
-    <a href="#ceramah">Ceramah undangan<span>Invited lectures</span></a>
+    <a href="#pimpin">Riset yang dipimpin<span>Led research</span></a>
     <a href="#hibah">Hibah riset<span>Research grants</span></a>
   </div>
 
   <div class="luar">
     <p class="ket">Profil di tempat lain</p>
-    <a href="https://scholar.google.com/citations?user=&hl=en&view_op=search_authors&mauthors=Ganjar+Fadillah" target="_blank" rel="noopener">Google Scholar</a>
-    <a href="https://sinta.kemdikbud.go.id/authors?q=Ganjar+Fadillah" target="_blank" rel="noopener">SINTA</a>
-    <a href="https://www.scopus.com/authid/detail.uri?authorId=57200947700" target="_blank" rel="noopener">Scopus</a>
-    <a href="https://openalex.org/A5026624986" target="_blank" rel="noopener">OpenAlex</a>
+    <a href="https://www.scopus.com/authid/detail.uri?authorId=57127299100" target="_blank" rel="noopener">Scopus</a>
+    <a href="https://sinta.kemdikbud.go.id/authors/detail?id=6676104&view=overview" target="_blank" rel="noopener">SINTA</a>
+    <a href="https://orcid.org/0000-0002-6956-6972" target="_blank" rel="noopener">ORCID</a>
   </div>
 
   <div class="catatan">
-    <p>Klik judul untuk membuka halaman penerbit. Daftar terpilih diambil dari artikel
-      di bawahnya, diurutkan menurut jumlah sitasi. Tanda <span class="bintang">*</span>
-      menandai penulis korespondensi.</p>
+    <p>Seluruh daftar di halaman ini disalin dari daftar riwayat hidup yang bersangkutan,
+      termasuk kolom indeksasi dan kuartil jurnalnya. Klik judul atau DOI untuk membuka
+      halaman penerbit. Tanda <span class="bintang">*</span> menandai penulis korespondensi
+      sebagaimana ditandai pada daftar tersebut.</p>
   </div>
 
   <div class="saring" id="saring">
@@ -142,28 +148,20 @@
   <p class="nir" id="nir" hidden>Tidak ada karya yang cocok.
     <button type="button" id="ulang">Tampilkan semua</button></p>
 
-  <section id="terpilih">
+  <section id="q1">
     <div class="subjalur">
-      <h3>Publikasi terpilih</h3>
-      <span class="jml" id="j-terpilih"></span>
+      <h3>Artikel jurnal Q1</h3>
+      <span class="jml" id="j-q1"></span>
     </div>
-    <ul class="daftar rangking" id="d-terpilih"></ul>
+    <ul class="daftar" id="d-q1"></ul>
   </section>
 
-  <section id="artikel">
+  <section id="q2">
     <div class="subjalur">
-      <h3>Artikel jurnal</h3>
-      <span class="jml" id="j-artikel"></span>
+      <h3>Artikel jurnal Q2 dan Q3</h3>
+      <span class="jml" id="j-q2"></span>
     </div>
-    <ul class="daftar" id="d-artikel"></ul>
-  </section>
-
-  <section id="buku">
-    <div class="subjalur">
-      <h3>Buku dan bab buku</h3>
-      <span class="jml" id="j-buku"></span>
-    </div>
-    <ul class="daftar" id="d-buku"></ul>
+    <ul class="daftar" id="d-q2"></ul>
   </section>
 
   <section id="prosiding">
@@ -174,51 +172,46 @@
     <ul class="daftar" id="d-prosiding"></ul>
   </section>
 
-  <section id="lain">
+  <section id="pimpin">
     <div class="subjalur">
-      <h3>Terbitan lain</h3>
-      <span class="jml" id="j-lain"></span>
+      <h3>Riset yang dipimpin</h3>
+      <span class="jml">6 kegiatan</span>
     </div>
-    <ul class="daftar" id="d-lain"></ul>
-  </section>
-
-  <section id="paten">
-    <div class="subjalur">
-      <h3>Paten</h3>
+    <div class="daftar" style="list-style:none">
+      <div class="baris"><span class="waktu">2026</span><span class="apa">Pengembangan Rapid test Kit Sensor Kolorimetri untuk Deteksi Bisphenol A pada Air kemasan plastik sebagai Alat Skrining Keamanan Pangan<span class="anak"><b>Ketua peneliti</b> &middot; Hilirisasi Riset – Pengujian Model Prototipe / Kemdiktisaintek &middot; anggota: Muflih A. Adnan dan Rahmat Hidayat &middot; luaran: blue print dan uji banding</span></span></div>
+      <div class="baris"><span class="waktu">2026</span><span class="apa">Pengembangan Electrodialytic Ion Transfer Devices Berbasis Membran Selektif untuk Pemulihan Nikel dari Limbah Industri<span class="anak"><b>Ketua peneliti</b> &middot; Penelitian Fundamental Reguler / Kemdiktisaintek &middot; anggota: Rahmat Hidayat dan Muhaimin &middot; luaran: artikel di jurnal internasional bereputasi</span></span></div>
+      <div class="baris"><span class="waktu">2025</span><span class="apa">Sensor portable berbasis Screen Printed Electrode-Graphene/REMO untuk Deteksi Mikroplastik<span class="anak"><b>Ketua peneliti</b> &middot; Hilirisasi Riset – Pengujian Model Prototipe / Kemdiktisaintek &middot; anggota: Rahmat Hidayat dan Febi Indah Fajarwati &middot; luaran: blue print dan uji banding</span></span></div>
+      <div class="baris"><span class="waktu">2025</span><span class="apa">Self‐healing of active site in graphene‐based composite electrocatalysts for refractory organic wastewater remediations<span class="anak"><b>Ketua peneliti</b> &middot; Kurita Water and Environment Foundation (KWEF) / Kurita &middot; anggota: Saras Anindya</span></span></div>
+      <div class="baris"><span class="waktu">2024</span><span class="apa">Sensor Kolorimetri untuk Deteksi Bisphenol-A pada Air Kemasan Plastik Berbasis Membran Tercetak Molekul<span class="anak"><b>Ketua peneliti</b> &middot; Hibah Kolaboratif / Universitas &middot; anggota: Achmad Fauzan dan Bambang Hernawan Nugroho &middot; luaran: artikel di jurnal internasional bereputasi</span></span></div>
+      <div class="baris"><span class="waktu">2024</span><span class="apa">Enrichment Nickel Purity with Ion Transfer Devices by Matrixes Isolation<span class="anak"><b>Ketua peneliti</b> &middot; Hilirisasi Inovasi Program Dana Padanan (PDP) / Kedaireka &middot; anggota: Rahmat Hidayat dan Anggi Saputra &middot; luaran: artikel di jurnal internasional bereputasi</span></span></div>
     </div>
-    <p class="kosong2">Belum ada paten terdaftar atas nama penulis pada sumber data yang dipakai
-      (OpenAlex dan laman resmi Jurusan Kimia UII). Bagian ini sengaja dibiarkan kosong,
-      bukan dikarang. Kirimkan nomor pendaftaran bila sudah ada, akan diisi di sini.</p>
-  </section>
-
-  <section id="ceramah">
-    <div class="subjalur">
-      <h3>Ceramah undangan</h3>
-    </div>
-    <p class="kosong2">Data ceramah undangan belum tersedia pada sumber terbuka. Bila ada daftar
-      sendiri, kirimkan dan akan dimasukkan ke sini.</p>
+    <p class="kosong2">Seluruhnya berperan sebagai ketua. Daftar pendanaan untuk
+      kegiatan yang sama ada di bagian hibah di bawahnya.</p>
   </section>
 
   <section id="hibah">
     <div class="subjalur">
       <h3>Hibah riset</h3>
-      <span class="jml">8 catatan</span>
+      <span class="jml">8 pendanaan</span>
     </div>
     <div class="daftar" style="list-style:none">
-      <div class="baris"><span class="waktu">2020</span><span class="apa">Advanced material for environmental and energy application<span class="anak">World Class Professor — RISTEK DIKTI &middot; peneliti</span></span></div>
-      <div class="baris"><span class="waktu">2020</span><span class="apa">Pengembangan dan fabrikasi membran 3D berbasis graphene oxide/hidrogel untuk desinfeksi air minum dan pengolahan limbah industri<span class="anak">DPPM UII &middot; peneliti</span></span></div>
-      <div class="baris"><span class="waktu">2019–2020</span><span class="apa">Development of electrochemical sensor for eugenol based on GO/SnO₂<span class="anak">DPPM UII &middot; ketua</span></span></div>
-      <div class="baris"><span class="waktu">2018–2019</span><span class="apa">The combined techniques of electrochemical-adsorption for removal synthetic dye<span class="anak">Metrohm Indonesia &middot; ketua</span></span></div>
-      <div class="baris"><span class="waktu">2017–2018</span><span class="apa">Electrochemical preparation of molecularly imprinted polymers on carbon paste electrode for determination of antioxidant and antibiotics<span class="anak">LPDP Thesis &middot; ketua</span></span></div>
-      <div class="baris"><span class="waktu">2016–2018</span><span class="apa">Development of electrochemical sensor based on MIPs for BHA analysis<span class="anak">Grant ITB &middot; ketua</span></span></div>
-      <div class="baris"><span class="waktu">2014–2015</span><span class="apa">Copigmentation of natural dyes anthocyanins as natural dye in DSSC<span class="anak">PKM DIKTI &middot; peneliti</span></span></div>
-      <div class="baris"><span class="waktu">2013–2014</span><span class="apa">Effectiveness of nanofertilizer based on APTMS-zeolite as slow release fertilizer system<span class="anak">PKM DIKTI &middot; peneliti</span></span></div>
+      <div class="baris"><span class="waktu">2026</span><span class="apa">Teknologi Ion Transfer Device Berbasis Membran untuk Ekstraksi Selektif Logam Kritis dari Mikroplastik di Perairan Indonesia<span class="anak"><b>Ketua peneliti</b> &middot; Riset Kolaborasi Internasional &middot; Kemdiktisaintek</span></span></div>
+      <div class="baris"><span class="waktu">2026</span><span class="apa">Pengembangan Rapid test Kit Sensor Kolorimetri untuk Deteksi Bisphenol A pada Air kemasan plastik sebagai Alat Skrining Keamanan Pangan<span class="anak"><b>Ketua peneliti</b> &middot; Hilirisasi Riset – Pengujian Model Prototipe &middot; Kemdiktisaintek</span></span></div>
+      <div class="baris"><span class="waktu">2026</span><span class="apa">Pengembangan Electrodialytic Ion Transfer Devices Berbasis Membran Selektif untuk Pemulihan Nikel dari Limbah Industri<span class="anak"><b>Ketua peneliti</b> &middot; Penelitian Fundamental Reguler &middot; Kemdiktisaintek</span></span></div>
+      <div class="baris"><span class="waktu">2025</span><span class="apa">Sensor portable berbasis Screen Printed Electrode-Graphene/REMO untuk Deteksi Mikroplastik<span class="anak"><b>Ketua peneliti</b> &middot; Hilirisasi Riset – Pengujian Model Prototipe &middot; Kemdiktisaintek</span></span></div>
+      <div class="baris"><span class="waktu">2025</span><span class="apa">Konversi Biomassa Menjadi Biochar/Magnetit Terenkapsulasi Sebagai Penghilang Kontaminan 3-MCPD dan GE pada Minyak Sawit<span class="anak"><b>Anggota peneliti</b> &middot; Penelitian Fundamental Reguler &middot; Kemdiktisaintek</span></span></div>
+      <div class="baris"><span class="waktu">2025</span><span class="apa">Self‐healing of active site in graphene‐based composite electrocatalysts for refractory organic wastewater remediations<span class="anak"><b>Ketua peneliti</b> &middot; Kurita Water and Environment Foundation (KWEF) &middot; Internasional (Kurita Jepang)</span></span></div>
+      <div class="baris"><span class="waktu">2024</span><span class="apa">Sintesis Polimer Bercetak Molekul pada Grafena/LTJ sebagai Material Aktif untuk Sensor Pendeteksi Cemaran 3-MCPD dalam Minyak Sawit<span class="anak"><b>Anggota peneliti</b> &middot; Penelitian Fundamental Reguler &middot; Kemdiktisaintek</span></span></div>
+      <div class="baris"><span class="waktu">2024</span><span class="apa">Enrichment Nickel Purity with Ion Transfer Devices by Matrixes Isolation<span class="anak"><b>Ketua peneliti</b> &middot; Penelitian Kerja Sama Luar Negeri &middot; Dana Padanan Kedaireka</span></span></div>
     </div>
+    <p class="kosong2">Skema, pemberi dana, judul, dan peran ditulis sebagaimana tercantum pada
+      daftar riwayat hidup. Lima di antaranya kegiatannya sama dengan riset yang dipimpin di
+      atas &mdash; di sana dilihat dari sisi peran dan luaran, di sini dari sisi pendanaannya.</p>
   </section>
 
   <p style="font-size:12.5px; color:#555; padding:18px 0 30px; margin:0">
-    Sumber: OpenAlex dan laman resmi Jurusan Kimia serta Program Studi D3 Analisis Kimia UII.
-    <span id="meta-bawah"></span>
+    Sumber: daftar riwayat hidup Ganjar Fadillah, tabel publikasi. Tidak ada data dari
+    luar dokumen itu. Halaman ini tidak diperbarui otomatis.
   </p>
 
 </main>
@@ -226,52 +219,43 @@
 <footer>
   <div class="wadah">
     <span>&copy; 2026 Ganjar Fadillah &middot; Universitas Islam Indonesia</span>
-    <span>Data publikasi: OpenAlex &amp; laman resmi UII</span>
+    <span>Data: daftar riwayat hidup</span>
   </div>
 </footer>
 
-<script src="data.js"></script>
+<script src="data.js?v=7cfbcd5b"></script>
 <script>
 const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g,
   c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 
-const BULAN = ['Januari','Februari','Maret','April','Mei','Juni','Juli',
-               'Agustus','September','Oktober','November','Desember'];
-const tglID = iso => { if (!iso) return '—'; const [y,m,d] = iso.split('-');
-  return `${Number(d)} ${BULAN[Number(m)-1]} ${y}`; };
+/* tandai penulis korespondensi (bintang di daftar riwayat hidup) */
+const penulis = p => esc(p).replace(/\*/g, '<span class="bintang">*</span>');
 
-function baris(w, ke){
+function baris(w){
   const judul = w.d
     ? `<a href="https://doi.org/${esc(w.d)}" target="_blank" rel="noopener">${esc(w.j)}</a>`
     : esc(w.j);
-  const terbit = w.v ? `${esc(w.v)} (${esc(w.t)})` : `(${esc(w.t)})`;
-  /* daftar terpilih: kolom kiri = peringkat sitasi, bukan tahun */
-  const kiri = ke === 'rangking'
-    ? `<span class="thn" title="${esc(w.s)} sitasi"><b>${esc(w.s)}</b><i>sitasi</i></span>`
-    : `<span class="thn">${esc(w.t)}</span>`;
   return `<li data-cari="${esc((w.j+' '+w.p+' '+w.v+' '+w.t).toLowerCase())}">
-    ${kiri}
-    <p class="p">${esc(w.p)}</p>
-    <p class="j">${judul}</p>
-    <p class="v">${terbit}${w.d ? `<a class="doi-t" href="https://doi.org/${esc(w.d)}" target="_blank" rel="noopener">${esc(w.d)}</a>` : ''}</p>
+    <span class="thn">${esc(w.t)}</span>
+    <p class="p">${penulis(w.p)}</p>
+    <p class="j">${judul}<span class="q">${esc(w.q)}</span></p>
+    <p class="v">${esc(w.v)}${w.d ? `<a class="doi-t" href="https://doi.org/${esc(w.d)}" target="_blank" rel="noopener">${esc(w.d)}</a>` : ''}</p>
   </li>`;
 }
 
-function isi(idDaftar, idJml, arr, ke){
+function isi(idDaftar, idJml, arr){
   const ul = document.getElementById(idDaftar);
   const jm = document.getElementById(idJml);
-  ul.innerHTML = arr.length ? arr.map(w => baris(w, ke)).join('')
+  ul.innerHTML = arr.length ? arr.map(baris).join('')
     : '<li class="kosong2">Tidak ada data pada kelompok ini.</li>';
   if (jm) jm.textContent = arr.length + ' entri';
   return arr.length;
 }
 
 const total = {
-  terpilih: isi('d-terpilih','j-terpilih', KARYA.terpilih, 'rangking'),
-  artikel: isi('d-artikel','j-artikel', KARYA.artikel),
+  q1: isi('d-q1','j-q1', KARYA.q1),
+  q2: isi('d-q2','j-q2', KARYA.q2.concat(KARYA.q3)),
   prosiding: isi('d-prosiding','j-prosiding', KARYA.prosiding),
-  buku: isi('d-buku','j-buku', KARYA.bab),
-  lain: isi('d-lain','j-lain', KARYA.lain),
 };
 
 /* saringan: menyembunyikan entri yang tak cocok, semua bagian sekaligus */
@@ -281,11 +265,10 @@ const bersih = document.getElementById('bersih');
 const nir = document.getElementById('nir');
 const ulang = document.getElementById('ulang');
 
-// semua entri karya (tanpa daftar terpilih, yang isinya duplikat)
-const unik = () => document.querySelectorAll('#d-artikel li[data-cari], #d-prosiding li[data-cari], #d-buku li[data-cari], #d-lain li[data-cari]');
+const unik = () => document.querySelectorAll('.daftar li[data-cari]');
 const jmlSemua = () => unik().length;
 
-// indeks teks sekali saja: 97 entri x pencarian, tanpa baca DOM berulang
+// indeks teks sekali saja: tanpa baca DOM berulang tiap ketikan
 let indeks = null;
 const siapkan = () => {
   if (!indeks) indeks = [...unik()].map(li => ({ li, t: li.dataset.cari || '' }));
@@ -297,42 +280,24 @@ function saring() {
   bersih.hidden = !s;
 
   let tampil = 0;
-  const data = siapkan();
-  data.forEach(({ li, t }) => {
+  siapkan().forEach(({ li, t }) => {
     const cocok = !s || t.includes(s);
     li.hidden = !cocok;
     if (cocok) tampil++;
   });
 
-  // daftar terpilih ikut disaring
-  let lain = 0;
-  document.querySelectorAll('#d-terpilih li[data-cari]').forEach(li => {
-    const cocok = !s || (li.dataset.cari || '').includes(s);
-    li.hidden = !cocok;
-    if (cocok) lain++;
-  });
-
   // sembunyikan bagian tanpa hasil, termasuk judulnya
-  ['artikel', 'buku', 'prosiding', 'lain'].forEach(id => {
+  ['q1', 'q2', 'prosiding'].forEach(id => {
     const sec = document.getElementById(id);
     const n = sec.querySelectorAll('li[data-cari]:not([hidden])').length;
     sec.hidden = n === 0;
   });
-  document.getElementById('terpilih').hidden = lain === 0;
-  // bagian tanpa data (paten, ceramah, hibah) juga disembunyikan saat menyaring
-  ['paten', 'ceramah', 'hibah'].forEach(id => {
-    document.getElementById(id).hidden = !!s;
-  });
+  // bagian tanpa data karya (riset, hibah) disembunyikan saat menyaring
+  ['pimpin', 'hibah'].forEach(id => { document.getElementById(id).hidden = !!s; });
 
-  const ada = tampil + lain > 0;
-  nir.hidden = !s || ada;
-
-  // saat tak ada hasil, cukup pesan nir — jangan dobel di penghitung
-  ket.textContent = !s
-    ? `${data.length} karya`
-    : ada
-      ? `${tampil} karya cocok` + (lain ? ` +${lain} terpilih` : '')
-      : '';
+  nir.hidden = !s || tampil > 0;
+  ket.textContent = !s ? `${jmlSemua()} karya`
+    : tampil ? `${tampil} karya cocok` : '';
 }
 
 let antre = 0;
@@ -349,12 +314,6 @@ document.addEventListener('keydown', e => {
   }
 });
 ket.textContent = `${jmlSemua()} karya`;
-if (typeof KARYA !== 'undefined' && KARYA.meta) {
-  const m = KARYA.meta;
-  const el = document.getElementById('meta-bawah');
-  if (el) el.textContent = `Tercatat ${m.jumlah} karya dan ${String(m.sitasi).replace(/\B(?=(\d{3})+(?!\d))/g,'.')} sitasi `
-    + `per ${tglID(m.diambil)}. Angka sitasi berubah mengikuti sumber.`;
-}
 </script>
 </body>
 </html>

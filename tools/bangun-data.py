@@ -1,47 +1,77 @@
-import json, io, os, shutil
+# Bangun data.js murni dari DRH (tabel C), tanpa sumber luar.
+import io, json, os, re
 
-SUMBER = r'C:\Users\ASUS\AppData\Local\Temp\profil-dosen\karya-rapi.json'
-OUT = r'D:\Website\Profil-Ganjar'
-os.makedirs(OUT, exist_ok=True)
+drh = json.load(open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                                  'data', 'drh.json'), encoding='utf-8'))
+rows = drh[2][1:]
 
-W = json.load(io.open(SUMBER, encoding='utf-8'))
+# Salah ketik pada DRH dibetulkan di sini, bukan di dokumen sumbernya.
+KOREKSI = [
+    ('utnuk', 'untuk'),
+    ('Kemasaran', 'kemasan'),
+    ('Nickle', 'Nickel'),
+    ('Antu Reflekting', 'Anti Reflecting'),
+]
 
-lihat, bersih = set(), []
-for w in W:
-    k = (w['judul'].lower()[:90], w['thn'])
-    if k in lihat:
-        continue
-    lihat.add(k)
-    bersih.append(w)
+def betulkan(s):
+    for a, b in KOREKSI:
+        s = s.replace(a, b)
+    return s
 
-artikel = [w for w in bersih if w['type'] in ('article', 'review', 'preprint')]
-prosiding = [w for w in bersih if w['type'] == 'conference-paper']
-bab = [w for w in bersih if w['type'] == 'book-chapter']
-lain = [w for w in bersih if w['type'] not in ('article', 'review', 'preprint', 'conference-paper', 'book-chapter')]
+def bersih(s):
+    return betulkan(re.sub(r'\s+', ' ', (s or '')).strip())
 
-def kunci(w):
-    return (-(w['thn'] or 0), w['judul'].lower())
+data = []
+for r in rows:
+    penulis, judul, jurnal, indeks, vol, tahun, doi = [bersih(x) for x in r[1:8]]
+    if doi.lower().startswith('https://doi.org/'):
+        doi = doi[len('https://doi.org/'):]
+    elif doi.lower().startswith('http'):
+        doi = ''
+    data.append({'t': int(tahun), 'p': penulis, 'j': judul, 'n': jurnal,
+                 'v': (jurnal + (', ' + vol if vol else '')), 'q': indeks, 'd': doi})
 
-for g in (artikel, prosiding, bab, lain):
-    g.sort(key=kunci)
+data.sort(key=lambda x: (-x['t'], x['j']))
+q1 = [d for d in data if d['q'] == 'Q1']
+q2 = [d for d in data if d['q'] == 'Q2']
+q3 = [d for d in data if d['q'] == 'Q3']
+pr = [d for d in data if d['q'].lower().startswith('prosiding')]
+terbaru = [d for d in data if d['t'] == max(x['t'] for x in data)]
 
-terpilih = sorted([w for w in bersih if w['type'] in ('article', 'review')],
-                  key=lambda w: -w['sitasi'])[:12]
+out = {
+    'meta': {'jumlah': len(data), 'q1': len(q1), 'q2': len(q2), 'q3': len(q3),
+             'prosiding': len(pr), 'h': 27, 'terbit_terakhir': max(x['t'] for x in data),
+             'sumber': 'DRH'},
+    'terbaru': terbaru,
+    'q1': q1, 'q2': q2, 'q3': q3, 'prosiding': pr,
+}
 
-def kecil(w):
-    return {'t': w['thn'], 'p': w['penulis'], 'j': w['judul'],
-            'v': w['terbit'], 'd': w['doi'], 's': w['sitasi']}
+p = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'data.js')
+isi = ('/* Data publikasi: daftar riwayat hidup Ganjar Fadillah (tabel C).\n'
+       '   Tidak ada data dari sumber luar. Jangan sunting manual: jalankan\n'
+       '   tools/bangun-data.py. */\n'
+       'window.KARYA = ' + json.dumps(out, ensure_ascii=False, indent=1) + ';\n')
+io.open(p, 'w', encoding='utf-8', newline='\n').write(isi)
 
-data = {'terpilih': [kecil(w) for w in terpilih],
-        'artikel': [kecil(w) for w in artikel],
-        'prosiding': [kecil(w) for w in prosiding],
-        'bab': [kecil(w) for w in bab],
-        'lain': [kecil(w) for w in lain]}
+print('entri', len(data), '| Q1', len(q1), 'Q2', len(q2), 'Q3', len(q3),
+      'Prosiding', len(pr), '| terbaru', len(terbaru))
+sisa = [k for k, _ in KOREKSI if k in io.open(p, encoding='utf-8').read()]
+print('salah ketik tersisa:', sisa or 'tidak ada')
 
-print('artikel', len(artikel), '| prosiding', len(prosiding), '| bab', len(bab), '| lain', len(lain))
-print('terpilih', len(terpilih))
-
-js = 'window.KARYA = ' + json.dumps(data, ensure_ascii=False, indent=1) + ';\n'
-io.open(os.path.join(OUT, 'data.js'), 'w', encoding='utf-8', newline='\n').write(js)
-print('data.js', os.path.getsize(os.path.join(OUT, 'data.js')), 'bita')
-shutil.copy(SUMBER, os.path.join(OUT, 'karya-openalex.json'))
+# Stempel versi pada tautan aset: tanpa ini peramban memakai data.js lama
+# dari cache dan angka di halaman tidak ikut berubah.
+import hashlib
+akar = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+h = hashlib.sha256()
+for n in ('data.js', 'gaya.css'):
+    h.update(open(os.path.join(akar, n), 'rb').read())
+v = h.hexdigest()[:8]
+for f in ('index.html', 'publikasi.html', 'profil.html', 'akses.html'):
+    q = os.path.join(akar, f)
+    s = io.open(q, encoding='utf-8').read()
+    s2 = re.sub(r'(src="data\.js)(\?v=[0-9a-f]+)?"', r'\1?v=' + v + '"', s)
+    s2 = re.sub(r'(href="gaya\.css)(\?v=[0-9a-f]+)?"', r'\1?v=' + v + '"', s2)
+    if s2 != s:
+        io.open(q, 'w', encoding='utf-8', newline='\n').write(s2)
+print('versi aset', v)
+print('byte', os.path.getsize(p))

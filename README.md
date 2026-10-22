@@ -1,104 +1,89 @@
-# Profil Ganjar Fadillah — situs statis
+# Profil Ganjar Fadillah
 
-Situs profil akademik, satu orang. Empat halaman, tanpa pustaka luar, tanpa build.
-Data publikasi ditarik otomatis dari OpenAlex oleh GitHub Actions.
+Situs statis empat halaman untuk Ganjar Fadillah, S.Si., M.Si., Ph.D. (Kimia, UII).
+Tanpa CDN, tanpa build, tanpa basis data.
 
-## Isi
+**Seluruh isi berasal dari satu sumber: daftar riwayat hidup (DRH) yang bersangkutan.**
+Tidak ada data dari OpenAlex, Scopus API, Google Scholar, atau laman lain.
 
-| Berkas | Guna |
+## Halaman
+
+| Berkas | Isi |
 |---|---|
-| `index.html` | Top — kabar: publikasi terbaru (otomatis) + kegiatan tetap |
-| `publikasi.html` | Publications — publikasi terpilih, artikel, prosiding, buku, paten, ceramah, hibah |
-| `profil.html` | Profiles — identitas, riwayat, penghargaan, organisasi, bidang keilmuan |
-| `akses.html` | Access — lokasi dan kontak |
-| `gaya.css` | seluruh tampilan |
-| `data.js` | data publikasi (DIBUAT OTOMATIS — jangan disunting tangan) |
-| `tools/ambil-openalex.py` | penarik data dari OpenAlex |
-| `.github/workflows/perbarui.yml` | penjadwal mingguan |
+| `index.html` | Beranda: pengantar, angka ringkas, kabar |
+| `publikasi.html` | 30 karya dari tabel C DRH, riset dipimpin, hibah |
+| `profil.html` | Identitas, riwayat pendidikan, penghargaan, organisasi, bidang, hilirisasi |
+| `akses.html` | Kontak |
 
-## Cara memasang di GitHub Pages
+## Alur data
 
-Folder ini **sudah berupa repo git** (branch `main`, 5 commit). Yang belum ada
-hanya alamat remote. Jadi ada dua jalan.
-
-### Jalan A — lewat git (dianjurkan)
-
-1. Buat repo **baru dan publik** di GitHub. Nama bebas, misal `profil-ganjar`.
-   **Jangan** centang "Add a README", "Add .gitignore", atau "Choose a license" —
-   nanti push ditolak karena riwayatnya bentrok. Biarkan kosong.
-2. Jalankan:
-
-```bash
-cd "D:/Website/Profil-Ganjar"
-git remote add origin https://github.com/<namapengguna>/profil-ganjar.git
-git push -u origin main
+```
+DRH.docx ──tools/ambil-drh.py──> data/drh.json ──tools/bangun-data.py──> data.js
 ```
 
-3. Saat diminta, masuk lewat peramban (Git Credential Manager sudah aktif di
-   mesin ini). Kalau muncul pilihan, pilih **sign in with your browser** —
-   jangan menempel kata sandi akun, itu sudah tidak dipakai GitHub.
-4. **Settings → Pages** → *Build and deployment* → Source: **Deploy from a branch**
-   → Branch: `main`, folder `/ (root)` → **Save**.
-5. Tunggu 1–2 menit, muat ulang halaman itu sampai muncul kotak
-   "Your site is live at …". Alamat: `https://<namapengguna>.github.io/profil-ganjar/`
+1. Taruh DRH terbaru di mana saja, lalu:
 
-### Jalan B — lewat peramban saja (tanpa git)
+   ```
+   python tools/ambil-drh.py "DRH-Ganjar.docx"
+   python tools/bangun-data.py
+   ```
 
-1. Buat repo publik kosong seperti di atas.
-2. **Add file → Upload files**, seret semua isi folder.
-3. Yang sering terlewat: folder `.github` (berisi workflow). Windows Explorer
-   menyembunyikannya — aktifkan **View → Show → Hidden items** dulu, atau
-   unggah `.github/workflows/perbarui.yml` terpisah lewat
-   **Add file → Create new file**, ketik nama `/.github/workflows/perbarui.yml`.
-4. Commit, lalu lakukan langkah 4–5 di atas.
+2. `data.js` dihasilkan ulang. Halaman lain tidak perlu disentuh.
 
-### Kalau halaman 404
+Isi `data/drh.json` adalah tabel DRH apa adanya (8 tabel). Nomor tabel:
 
-- Pastikan repo **publik**. Pages gratis tidak aktif di repo privat.
-- Pastikan berkas ada di **akar** repo (`index.html` sejajar `README.md`),
-  bukan di dalam subfolder.
-- Alamat harus diakhiri garis miring: `.../profil-ganjar/` — tanpa itu kadang 404.
-- Butuh sampai 10 menit pada pemuatan pertama.
+| # | Tabel |
+|---|---|
+| 0 | Identitas |
+| 1 | Riwayat pendidikan |
+| 2 | Publikasi |
+| 3 | Riset yang dipimpin |
+| 4 | Hibah / pendanaan |
+| 5 | Kelompok riset |
+| 6 | Penghargaan |
+| 7 | Hilirisasi |
 
+## Angka
 
-## Membuat data ikut memperbarui sendiri
+- **h-index 27** — sel "H-index (Scopus)" di tabel identitas DRH. Satu angka saja,
+  tidak ada versi lain.
+- **30 karya**, 24 di antaranya Q1, mengikuti kolom indeksasi DRH.
+- **Sitasi tidak ditampilkan** — DRH tidak mencantumkannya.
 
-Workflow sudah ada di `.github/workflows/perbarui.yml`. Bawaannya jalan
-**tiap Senin 02.00 UTC (09.00 WIB)**, dan bisa dijalankan manual dari
-tab **Actions → Perbarui data publikasi → Run workflow**.
+## Yang tidak ditampilkan
 
-Tidak ada setelan yang wajib. Yang dianjurkan:
+- **Nominal dana hibah** dan **nomor kontrak/SK**, walau ada di tabel E DRH.
+  Dijaga uji regex: `\d{1,3}\.\d{3}\.\d{3}` dan pola `\d{3}/…` harus nol temuan.
 
-**Kunci OpenAlex (gratis).** Tanpa kunci, setiap permintaan memakai satu jatah
-harian bersama per alamat IP; server GitHub Actions berbagi IP dengan banyak
-orang, jadi bisa kehabisan dan gagal. Cara:
+## Salah ketik
 
-1. Buka https://openalex.org/settings/api — minta kunci dengan surel
-   `ganjar.fadillah@uii.ac.id` (atau surelmu).
-2. Klik tautan konfirmasi yang dikirim ke surel.
-3. Di repo: **Settings → Secrets and variables → Actions → New repository secret**.
-   Nama: `OPENALEX_KEY`, isi: kuncinya.
-4. Workflow sudah membacanya sebagai `secrets.OPENALEX_KEY`.
+Salah ketik pada DRH dibetulkan, dicatat di satu tempat (`KOREKSI` pada
+`tools/bangun-data.py`) supaya bisa diaudit:
 
-## Batas yang perlu diketahui
+| DRH | Situs |
+|---|---|
+| `utnuk` | untuk |
+| `Kemasaran` | kemasan |
+| `Nickle` | Nickel |
+| `Antu Reflekting` | Anti Reflecting |
+| `LTJi` | LTJ |
 
-- **Bukan waktu nyata.** OpenAlex menarik dari Crossref dan penerbit. Artikel
-  biasanya muncul 1–14 hari setelah terbit; prosiding konferensi bisa berbulan-bulan.
-- **Satu profil penulis saja** (`A5026624986`). OpenAlex punya dua profil lain
-  bernama sama berisi 1 karya; keduanya diabaikan. Karya yang keliru terdaftar
-  di profil lain tidak akan tertangkap.
-- **Paten dan ceramah undangan tidak bisa otomatis** — OpenAlex tak punya datanya.
-  Bagian itu diisi tangan bila ada daftarnya.
-- **Foto profil** masih kotak kosong. Simpan berkasnya sebagai `foto.jpg`
-  (lebar ≥ 860 px), lalu ganti blok `<div class="foto">` di `profil.html`
-  menjadi `<img src="foto.jpg" alt="Ganjar Fadillah">`.
-- Repo harus **publik** agar GitHub Pages gratis aktif.
+`Standford` → `Stanford` juga dibetulkan (nama institusi pemberi penghargaan).
 
-## Menjalankan sendiri di komputer
+## Uji
 
-```bash
-python tools/ambil-openalex.py          # perbarui data.js
-python -m http.server 8080              # lalu buka http://127.0.0.1:8080
+```
+python uji.py
 ```
 
-Hanya butuh Python 3.8+ tanpa pustaka tambahan.
+Memeriksa: jumlah entri per bagian, tidak ada nominal/kontrak, h-index 27,
+tidak ada sisa kata "OpenAlex", judul tab, kontak, target sentuh ≥44px, dan
+tidak ada luberan di 360/390/1280px.
+
+## Catatan teknis
+
+- Daftar karya di `publikasi.html` diisi JS dari `data.js`. Kalau JS mati, yang
+  tampil hanya riset dan hibah (keduanya HTML statis).
+- Font memakai tumpukan sistem; tidak ada berkas font yang diunduh.
+- Foto: `foto.jpg` (900×1125) dan `foto-kecil.jpg` (420×525), dipakai sama di
+  keempat halaman dengan `object-position` identik.
