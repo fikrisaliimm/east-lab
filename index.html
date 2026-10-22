@@ -39,15 +39,15 @@
     membran. Mengajar di Jurusan Kimia dan Program Studi D3 Analisis Kimia.
   </p>
 
-  <div class="jalur">
-    <h2>Kabar terbaru</h2>
-  </div>
-
   <div class="statistik" id="statistik" aria-label="Ringkasan angka">
     <div><span class="angka" id="s-karya">—</span><span class="label">karya</span></div>
     <div><span class="angka" id="s-sitasi">—</span><span class="label">sitasi</span></div>
     <div><span class="angka" id="s-h">—</span><span class="label">h-index</span></div>
     <div><span class="angka" id="s-tahun">—</span><span class="label">terbitan terakhir</span></div>
+  </div>
+
+  <div class="jalur">
+    <h2>Kabar terbaru</h2>
   </div>
 
   <p class="catatan" id="gariswaktu">Memuat…</p>
@@ -124,7 +124,7 @@ if (typeof KARYA === 'undefined') {
   const m = KARYA.meta || {};
   document.getElementById('gariswaktu').innerHTML =
     `Daftar lengkapnya ada di halaman <a href="publikasi.html">Publikasi</a>. `
-    + `Terakhir ditarik ${tglPanjang(m.diambil)}.`;
+    + `Diperbarui ${tglPanjang(m.diambil)}.`;
   document.getElementById('sumber').textContent = 'Data publikasi: OpenAlex';
 
   const isi = (id, v) => { const e = document.getElementById(id); if (e) e.textContent = v; };

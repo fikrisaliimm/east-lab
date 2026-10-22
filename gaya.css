@@ -284,7 +284,7 @@ nav a.ini::after{transform:scaleX(1)}
   border-bottom:1px solid var(--garis);
 }
 .tautan-bagian a{
-  color:var(--tinta); font-weight:600; padding:8px 14px; min-height:38px;
+  color:var(--tinta); font-weight:600; padding:10px 15px; min-height:44px;
   display:inline-flex; align-items:center;
   background:transparent; border:1px solid var(--garis-tua);
   transition:background 160ms ease-out, color 160ms ease-out, border-color 160ms ease-out;
@@ -375,8 +375,6 @@ footer span:last-child{color:#9DB0CE}
 }
 @media (max-width:780px){
   nav .merek{display:none}
-  .saring{flex-direction:column; align-items:stretch}
-  .saring .ket{align-self:flex-end}
   .subjalur{flex-wrap:wrap}
   .subjalur .jml{margin-left:0; white-space:nowrap}
   .statistik{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -388,12 +386,15 @@ footer span:last-child{color:#9DB0CE}
   .wadah{padding:0 18px}
   nav .wadah{min-height:54px}
   nav .tautan{
-    gap:20px; overflow-x:auto; scrollbar-width:none; margin-left:-18px;
+    gap:8px; overflow-x:auto; scrollbar-width:none;
+    margin-left:-18px; padding-left:18px; margin-right:-18px; padding-right:12px;
   }
   nav .tautan::-webkit-scrollbar{display:none}
-  nav a{white-space:nowrap; font-size:13px}
+  nav a{white-space:nowrap; font-size:13px; padding:0 6px}
   .jalur{padding:28px 0 11px; gap:10px}
   .jalur h2{white-space:normal}
+  .pengantar{font-size:16.5px; line-height:1.6}
+  .kabar .judul{font-size:17.5px}
   .kabar li{grid-template-columns:1fr; gap:5px; padding:15px 10px 16px 10px}
   .kabar .tgl{padding-top:0}
   .subnav{grid-template-columns:repeat(2,minmax(0,1fr)); gap:0 18px}

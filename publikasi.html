@@ -22,21 +22,48 @@
     color:var(--redup); white-space:nowrap; letter-spacing:.04em;
   }
   .saring{
-    display:flex; gap:14px; flex-wrap:wrap; align-items:center;
+    display:flex; gap:8px 16px; flex-wrap:wrap; align-items:center;
     padding:14px 0 0;
   }
+  .kotak{position:relative; flex:1 1 300px; display:flex}
   .saring input{
-    flex:1 1 280px; min-height:46px; padding:10px 14px 10px 38px;
-    font:inherit; font-size:14.5px;
-    border:1px solid var(--garis); border-radius:0; background:#fff; color:inherit;
-    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none' stroke='%235C6169' stroke-width='1.6'><circle cx='7' cy='7' r='4.6'/><path d='M10.6 10.6L14 14'/></svg>");
-    background-repeat:no-repeat; background-position:13px 50%;
+    width:100%; min-height:48px; padding:11px 44px 11px 40px;
+    font:inherit; font-size:16px; /* 16px: cegah iOS memperbesar halaman saat fokus */
+    border:1px solid var(--garis-tua); border-radius:0; background:#fff; color:inherit;
+    -webkit-appearance:none; appearance:none;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none' stroke='%23565B63' stroke-width='1.6'><circle cx='7' cy='7' r='4.6'/><path d='M10.6 10.6L14 14'/></svg>");
+    background-repeat:no-repeat; background-position:14px 50%;
   }
-  .saring input:focus{outline:2px solid var(--biru); outline-offset:1px; border-color:var(--biru)}
-  .saring input::placeholder{color:#9AA0A8}
+  .saring input::-webkit-search-cancel-button{-webkit-appearance:none; display:none}
+  .saring input:focus{
+    outline:2px solid var(--navy); outline-offset:-2px; border-color:var(--navy);
+  }
+  .saring input::placeholder{color:#767C85}
+  .bersih{
+    position:absolute; right:0; top:0; width:44px; height:100%;
+    display:flex; align-items:center; justify-content:center;
+    border:0; background:none; color:var(--redup); cursor:pointer;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .bersih:hover{color:var(--tinta)}
   .saring .ket{
-    font-family:var(--mono); font-size:11px; color:var(--redup);
-    letter-spacing:.03em;
+    font-family:var(--mono); font-size:11.5px; color:var(--redup);
+    letter-spacing:.03em; white-space:nowrap;
+  }
+  .nir{
+    margin:0; padding:18px 0 20px; font-size:15px; color:var(--redup);
+    border-bottom:1px solid var(--garis);
+  }
+  .nir button{
+    font:inherit; font-size:14px; color:var(--navy); background:none;
+    border:0; border-bottom:1px solid var(--navy); padding:0 0 1px;
+    cursor:pointer; margin-left:4px;
+  }
+  .nir button:hover{color:var(--navy-tua)}
+  @media (max-width:780px){
+    .saring{flex-direction:column; align-items:stretch; gap:8px}
+    .kotak{flex:none; width:100%}
+    .saring .ket{align-self:flex-start}
   }
   .bintang{color:#A31515; font-weight:700}
   .kosong2{
@@ -100,10 +127,20 @@
       menandai penulis korespondensi.</p>
   </div>
 
-  <div class="saring">
-    <input type="search" id="cari" placeholder="Cari judul, penulis, jurnal…" aria-label="Cari publikasi">
+  <div class="saring" id="saring">
+    <div class="kotak">
+      <input type="search" id="cari" placeholder="Cari judul, penulis, jurnal…"
+             aria-label="Cari publikasi" autocomplete="off" spellcheck="false"
+             enterkeyhint="search">
+      <button type="button" class="bersih" id="bersih" aria-label="Bersihkan pencarian" hidden>
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor"
+             stroke-width="1.8" aria-hidden="true"><path d="M1 1l12 12M13 1L1 13"/></svg>
+      </button>
+    </div>
     <span class="ket" id="ket" aria-live="polite"></span>
   </div>
+  <p class="nir" id="nir" hidden>Tidak ada karya yang cocok.
+    <button type="button" id="ulang">Tampilkan semua</button></p>
 
   <section id="terpilih">
     <div class="subjalur">
@@ -240,26 +277,78 @@ const total = {
 /* saringan: menyembunyikan entri yang tak cocok, semua bagian sekaligus */
 const cari = document.getElementById('cari');
 const ket = document.getElementById('ket');
+const bersih = document.getElementById('bersih');
+const nir = document.getElementById('nir');
+const ulang = document.getElementById('ulang');
+
+// semua entri karya (tanpa daftar terpilih, yang isinya duplikat)
 const unik = () => document.querySelectorAll('#d-artikel li[data-cari], #d-prosiding li[data-cari], #d-buku li[data-cari], #d-lain li[data-cari]');
-cari.addEventListener('input', () => {
+const jmlSemua = () => unik().length;
+
+// indeks teks sekali saja: 97 entri x pencarian, tanpa baca DOM berulang
+let indeks = null;
+const siapkan = () => {
+  if (!indeks) indeks = [...unik()].map(li => ({ li, t: li.dataset.cari || '' }));
+  return indeks;
+};
+
+function saring() {
   const s = cari.value.trim().toLowerCase();
-  let tampil = 0, semua = 0;
-  unik().forEach(li => {
-    semua++;
-    const cocok = !s || li.dataset.cari.includes(s);
-    li.style.display = cocok ? '' : 'none';
+  bersih.hidden = !s;
+
+  let tampil = 0;
+  const data = siapkan();
+  data.forEach(({ li, t }) => {
+    const cocok = !s || t.includes(s);
+    li.hidden = !cocok;
     if (cocok) tampil++;
   });
+
+  // daftar terpilih ikut disaring
+  let lain = 0;
   document.querySelectorAll('#d-terpilih li[data-cari]').forEach(li => {
-    li.style.display = (!s || li.dataset.cari.includes(s)) ? '' : 'none';
+    const cocok = !s || (li.dataset.cari || '').includes(s);
+    li.hidden = !cocok;
+    if (cocok) lain++;
   });
-  const lain = [...document.querySelectorAll('#d-terpilih li[data-cari]')]
-    .filter(li => !s || li.dataset.cari.includes(s)).length;
-  ket.textContent = s
-    ? `${tampil} dari ${semua} karya cocok, +${lain} di daftar terpilih`
-    : `${semua} karya`;
+
+  // sembunyikan bagian tanpa hasil, termasuk judulnya
+  ['artikel', 'buku', 'prosiding', 'lain'].forEach(id => {
+    const sec = document.getElementById(id);
+    const n = sec.querySelectorAll('li[data-cari]:not([hidden])').length;
+    sec.hidden = n === 0;
+  });
+  document.getElementById('terpilih').hidden = lain === 0;
+  // bagian tanpa data (paten, ceramah, hibah) juga disembunyikan saat menyaring
+  ['paten', 'ceramah', 'hibah'].forEach(id => {
+    document.getElementById(id).hidden = !!s;
+  });
+
+  const ada = tampil + lain > 0;
+  nir.hidden = !s || ada;
+
+  // saat tak ada hasil, cukup pesan nir — jangan dobel di penghitung
+  ket.textContent = !s
+    ? `${data.length} karya`
+    : ada
+      ? `${tampil} karya cocok` + (lain ? ` +${lain} terpilih` : '')
+      : '';
+}
+
+let antre = 0;
+cari.addEventListener('input', () => {          // debounce ringan: tahan ketikan cepat
+  clearTimeout(antre);
+  antre = setTimeout(saring, 60);
 });
-ket.textContent = `${unik().length} karya`;
+cari.addEventListener('search', saring);         // tombol "cari" di papan ketik HP
+bersih.addEventListener('click', () => { cari.value = ''; saring(); cari.focus(); });
+ulang.addEventListener('click', () => { cari.value = ''; saring(); cari.focus(); });
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && document.activeElement === cari && cari.value) {
+    e.preventDefault(); cari.value = ''; saring();
+  }
+});
+ket.textContent = `${jmlSemua()} karya`;
 if (typeof KARYA !== 'undefined' && KARYA.meta) {
   const m = KARYA.meta;
   const el = document.getElementById('meta-bawah');
