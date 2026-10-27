@@ -187,9 +187,27 @@ for k, (hk, hg) in HARAP.items():
     hasil = ketik(k); time.sleep(0.25)
     cek(f'cari "{k}" -> {hk} karya + {hg} kegiatan', hasil == [hk, hg], f'dapat {hasil}')
 
+# hasil harus masuk pandangan; kalau tidak, pencarian terasa mati
+for k in ('nikel', 'mikroplastik', 'ion transfer', 'bisphenol'):
+    ketik(k); time.sleep(0.9)      # beri waktu gulir halus selesai
+    cek(f'cari "{k}": hasil pertama terlihat di layar', ev(
+        '(()=>{const vis=[...document.querySelectorAll('
+        '"#q1 .daftar li,#q2 .daftar li,#prosiding .daftar li,#pimpin .baris,#hibah .baris")]'
+        '.filter(e=>!e.hidden);if(!vis.length)return false;'
+        'const r=vis[0].getBoundingClientRect();'
+        'return r.top>=0 && r.top<innerHeight-80;})()'),
+        ev('(()=>{const vis=[...document.querySelectorAll('
+           '"#pimpin .baris,#hibah .baris")].filter(e=>!e.hidden);'
+           'return vis.length?Math.round(vis[0].getBoundingClientRect().top):null;})()'))
+
 ketik('xyz'); time.sleep(0.2)
 cek('tanpa hasil: pesan kosong tampil', ev('!document.getElementById("nir").hidden'))
 cek('tanpa hasil: hitungan dikosongkan', ev('document.getElementById("ket").textContent') == '')
+cek('tanpa hasil: pesan kosong terlihat di layar', ev(
+    '(()=>{const r=document.getElementById("nir").getBoundingClientRect();'
+    'return r.top>=-2 && r.bottom<=innerHeight+2;})()'),
+    ev('(()=>{const r=document.getElementById("nir").getBoundingClientRect();'
+       'return [Math.round(r.top),Math.round(r.bottom),innerHeight];})()'))
 ev('document.getElementById("ulang").click()'); time.sleep(0.2)
 cek('tombol "Tampilkan semua" memulihkan 30 karya',
     ketik('') == [30, 0] or ev('document.getElementById("ket").textContent') == '30 karya',

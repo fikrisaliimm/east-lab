@@ -50,6 +50,9 @@
     font-family:var(--mono); font-size:11.5px; color:var(--redup);
     letter-spacing:.03em; white-space:nowrap;
   }
+  /* hasil saringan digulir ke pandangan; sisakan ruang untuk nav lengket */
+  .daftar li, .daftar .baris{scroll-margin-top:96px}
+  #saring{scroll-margin-top:88px}
   .nir{
     margin:0; padding:18px 0 20px; font-size:15px; color:var(--redup);
     border-bottom:1px solid var(--garis);
@@ -269,11 +272,11 @@ function saring() {
   const kata = s ? s.split(' ') : [];
   bersih.hidden = !s;
 
-  let nKarya = 0, nKeg = 0;
+  let nKarya = 0, nKeg = 0, pertama = null;
   siapkan().forEach(({ el, t, karya }) => {
     const cocok = !kata.length || kata.every(k => t.includes(k));
     el.hidden = !cocok;
-    if (cocok) karya ? nKarya++ : nKeg++;
+    if (cocok) { karya ? nKarya++ : nKeg++; if (!pertama) pertama = el; }
   });
 
   ['q1', 'q2', 'prosiding', 'pimpin', 'hibah'].forEach(id => {
@@ -286,6 +289,15 @@ function saring() {
     : nKarya + nKeg ? [nKarya ? `${nKarya} karya` : '', nKeg ? `${nKeg} kegiatan` : '']
         .filter(Boolean).join(' · ') + ' cocok'
     : '';
+
+  /* Hasil sering berada jauh di bawah kotak cari. Tanpa ini, layar tidak
+     berubah sama sekali dan pencarian terasa mati. Digulir ke judul bagian,
+     bukan ke entri: pembaca perlu tahu bagian mana yang cocok. */
+  if (s && pertama) {
+    const sec = pertama.closest('section');
+    (sec || pertama).scrollIntoView({block: 'start', behavior: 'smooth'});
+  }
+  if (!s) window.scrollTo({top: 0, behavior: 'smooth'});
 }
 
 let antre = 0;
