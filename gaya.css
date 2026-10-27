@@ -14,6 +14,8 @@
   --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
 }
 *{box-sizing:border-box}
+/* atribut hidden harus menang atas display:flex/grid milik komponen */
+[hidden]{display:none !important}
 html{-webkit-text-size-adjust:100%; scroll-behavior:smooth}
 body{
   margin:0; color:var(--tinta); background:var(--kertas);

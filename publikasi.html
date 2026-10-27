@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Publikasi — Ganjar Fadillah</title>
-<link rel="stylesheet" href="gaya.css?v=622caceb">
+<link rel="stylesheet" href="gaya.css?v=06b61d14">
 <style>
   .subjalur{
     display:flex; align-items:baseline; gap:14px; flex-wrap:wrap;
@@ -63,6 +63,9 @@
     cursor:pointer; margin-left:4px;
   }
   .nir button:hover{color:var(--navy-tua)}
+  /* wadah hasil saringan: entri dari lima bagian berbaur di satu daftar */
+  .hasil{margin-top:6px}
+  .hasil .thn{color:var(--redup)}
   @media (max-width:780px){
     .saring{flex-direction:column; align-items:stretch; gap:8px}
     .kotak{flex:none; width:100%}
@@ -144,6 +147,11 @@
   <p class="nir" id="nir" hidden>Tidak ada karya yang cocok.
     <button type="button" id="ulang">Tampilkan semua</button></p>
 
+  <!-- Hasil saringan berkumpul di sini, tepat di bawah kotak cari.
+       Selama mencari, kelima bagian di bawah disembunyikan total supaya
+       yang tersisa di layar hanya entri yang cocok. -->
+  <div class="daftar hasil" id="hasil" hidden></div>
+
   <section id="q1">
     <div class="subjalur">
       <h3>Artikel jurnal Q1</h3>
@@ -208,7 +216,7 @@
   </div>
 </footer>
 
-<script src="data.js?v=622caceb"></script>
+<script src="data.js?v=06b61d14"></script>
 <script>
 const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g,
   c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -249,6 +257,8 @@ const ket = document.getElementById('ket');
 const bersih = document.getElementById('bersih');
 const nir = document.getElementById('nir');
 const ulang = document.getElementById('ulang');
+const hasil = document.getElementById('hasil');
+const subnav = document.querySelector('.subnav');
 
 const karyaEl = () => document.querySelectorAll(
   '#q1 .daftar li, #q2 .daftar li, #prosiding .daftar li');
@@ -263,7 +273,7 @@ function siapkan() {
   indeks = [];
   [...karyaEl()].forEach(el => indeks.push({ el, karya: true }));
   [...kegEl()].forEach(el => indeks.push({ el, karya: false }));
-  indeks.forEach(o => { o.t = o.el.dataset.cari = rapi(o.el.textContent); });
+  indeks.forEach(o => { o.t = rapi(o.el.textContent); });
   return indeks;
 }
 
@@ -271,33 +281,37 @@ function saring() {
   const s = rapi(cari.value);
   const kata = s ? s.split(' ') : [];
   bersih.hidden = !s;
+  hasil.replaceChildren();
+  hasil.hidden = !s;
+  subnav.hidden = !!s;                     // tautan bagian tak berguna saat menyaring
 
-  let nKarya = 0, nKeg = 0, pertama = null;
-  siapkan().forEach(({ el, t, karya }) => {
-    const cocok = !kata.length || kata.every(k => t.includes(k));
-    el.hidden = !cocok;
-    if (cocok) { karya ? nKarya++ : nKeg++; if (!pertama) pertama = el; }
+  let nKarya = 0, nKeg = 0;
+  const cocok = [];
+  siapkan().forEach(o => {
+    const ya = !kata.length || kata.every(k => o.t.includes(k));
+    if (!s) return;
+    if (ya) { cocok.push(o); o.karya ? nKarya++ : nKeg++; }
+  });
+
+  /* Hasil DIPINDAH ke wadah tepat di bawah kotak cari — bukan disorot di
+     tempat asalnya. Kelima bagian disembunyikan, jadi yang tersisa di layar
+     hanya entri yang masuk daftar pencarian. Salinan dipakai supaya daftar
+     asli utuh dan tak perlu dipulihkan saat kotak dikosongkan. */
+  cocok.forEach(o => {
+    const salinan = o.el.cloneNode(true);
+    salinan.removeAttribute('hidden');
+    hasil.appendChild(salinan);
   });
 
   ['q1', 'q2', 'prosiding', 'pimpin', 'hibah'].forEach(id => {
-    const sec = document.getElementById(id);
-    sec.hidden = !!s && !sec.querySelector('[data-cari]:not([hidden])');
+    document.getElementById(id).hidden = !!s;
   });
 
-  nir.hidden = !s || nKarya + nKeg > 0;
+  nir.hidden = !s || cocok.length > 0;
   ket.textContent = !s ? `${karyaEl().length} karya`
-    : nKarya + nKeg ? [nKarya ? `${nKarya} karya` : '', nKeg ? `${nKeg} kegiatan` : '']
+    : cocok.length ? [nKarya ? `${nKarya} karya` : '', nKeg ? `${nKeg} kegiatan` : '']
         .filter(Boolean).join(' · ') + ' cocok'
     : '';
-
-  /* Hasil sering berada jauh di bawah kotak cari. Tanpa ini, layar tidak
-     berubah sama sekali dan pencarian terasa mati. Digulir ke judul bagian,
-     bukan ke entri: pembaca perlu tahu bagian mana yang cocok. */
-  if (s && pertama) {
-    const sec = pertama.closest('section');
-    (sec || pertama).scrollIntoView({block: 'start', behavior: 'smooth'});
-  }
-  if (!s) window.scrollTo({top: 0, behavior: 'smooth'});
 }
 
 let antre = 0;

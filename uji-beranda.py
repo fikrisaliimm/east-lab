@@ -171,10 +171,11 @@ def ketik(s):
     ev('(()=>{const c=document.getElementById("cari");c.value=%s;'
        'c.dispatchEvent(new Event("input",{bubbles:true}));})()' % json.dumps(s))
     time.sleep(0.25)          # debounce 60 ms di halaman; beri ruang
-    return ev('(()=>{const li=[...document.querySelectorAll('
-              '"#q1 .daftar li,#q2 .daftar li,#prosiding .daftar li")];'
-              'const kg=[...document.querySelectorAll("#pimpin .baris,#hibah .baris")];'
-              'return [li.filter(e=>!e.hidden).length, kg.filter(e=>!e.hidden).length]})()')
+    # hitung yang tersisa di WADAH HASIL, bukan di bagian asal
+    return ev('(()=>{const h=document.getElementById("hasil");'
+              'const li=[...h.querySelectorAll("li")];'
+              'const kg=[...h.querySelectorAll(".baris")];'
+              'return [li.length, kg.length]})()')
 
 # tiap kunci: [harapan karya, harapan kegiatan]
 HARAP = {
@@ -184,40 +185,49 @@ HARAP = {
     'penelitian fundamental': [0, 4], 'kemitraan': [0, 0], 'xyz': [0, 0],
 }
 for k, (hk, hg) in HARAP.items():
-    hasil = ketik(k); time.sleep(0.25)
+    hasil = ketik(k); time.sleep(0.15)
     cek(f'cari "{k}" -> {hk} karya + {hg} kegiatan', hasil == [hk, hg], f'dapat {hasil}')
 
-# hasil harus masuk pandangan; kalau tidak, pencarian terasa mati
-for k in ('nikel', 'mikroplastik', 'ion transfer', 'bisphenol'):
-    ketik(k); time.sleep(0.9)      # beri waktu gulir halus selesai
-    cek(f'cari "{k}": hasil pertama terlihat di layar', ev(
-        '(()=>{const vis=[...document.querySelectorAll('
-        '"#q1 .daftar li,#q2 .daftar li,#prosiding .daftar li,#pimpin .baris,#hibah .baris")]'
-        '.filter(e=>!e.hidden);if(!vis.length)return false;'
-        'const r=vis[0].getBoundingClientRect();'
-        'return r.top>=0 && r.top<innerHeight-80;})()'),
-        ev('(()=>{const vis=[...document.querySelectorAll('
-           '"#pimpin .baris,#hibah .baris")].filter(e=>!e.hidden);'
-           'return vis.length?Math.round(vis[0].getBoundingClientRect().top):null;})()'))
+# inti keluhan: saat mencari, yang tersisa DI LAYAR hanya hasil
+for k in ('nikel', 'mikroplastik', 'ion transfer', 'bisphenol', 'Q1'):
+    ketik(k); time.sleep(0.3)
+    cek(f'cari "{k}": kelima bagian asli tersembunyi', ev(
+        '["q1","q2","prosiding","pimpin","hibah"]'
+        '.every(i=>document.getElementById(i).hidden)'))
+    cek(f'cari "{k}": hasil menempel di bawah kotak cari', ev(
+        '(()=>{const h=document.getElementById("hasil").getBoundingClientRect();'
+        'const c=document.getElementById("cari").getBoundingClientRect();'
+        'return h.top>=c.bottom-2 && h.top-c.bottom<80})()'),
+        ev('(()=>{const h=document.getElementById("hasil").getBoundingClientRect();'
+           'const c=document.getElementById("cari").getBoundingClientRect();'
+           'return [Math.round(c.bottom),Math.round(h.top)]})()'))
+    cek(f'cari "{k}": tak ada sisa bagian asli di layar',
+        ev('(()=>{const lain=[...document.querySelectorAll("body *")]'
+           '.filter(e=>e.children.length===0 && e.textContent.trim() && e.offsetParent);'
+           'return lain.filter(e=>!e.closest("#hasil,#saring,.subjalur,#nir,nav,header,footer,.jalur,.luar"))'
+           '.length})()') == 0,
+        ev('(()=>{const lain=[...document.querySelectorAll("body *")]'
+           '.filter(e=>e.children.length===0 && e.textContent.trim() && e.offsetParent);'
+           'return lain.filter(e=>!e.closest("#hasil,#saring,.subjalur,#nir,nav,header,footer,.jalur,.luar"))'
+           '.slice(0,8).map(e=>e.tagName+"|"+e.className+"|"+e.textContent.trim().slice(0,40))})()'))
+
+# kosongkan -> semua kembali seperti semula
+ev('document.getElementById("ulang").click()'); time.sleep(0.3)
+cek('kosong: wadah hasil disembunyikan', ev('document.getElementById("hasil").hidden'))
+cek('kosong: kelima bagian tampil lagi',
+    ev('["q1","q2","prosiding","pimpin","hibah"].every(i=>!document.getElementById(i).hidden)'))
+cek('kosong: 30 karya utuh di daftar asli',
+    ev('[...document.querySelectorAll("#q1 .daftar li,#q2 .daftar li,#prosiding .daftar li")]'
+       '.filter(e=>!e.hidden).length') == 30)
+cek('kosong: hitungan kembali "30 karya"',
+    ev('document.getElementById("ket").textContent') == '30 karya')
+cek('kosong: tautan bagian tampil lagi', ev('!document.querySelector(".subnav").hidden'))
 
 ketik('xyz'); time.sleep(0.2)
 cek('tanpa hasil: pesan kosong tampil', ev('!document.getElementById("nir").hidden'))
 cek('tanpa hasil: hitungan dikosongkan', ev('document.getElementById("ket").textContent') == '')
-cek('tanpa hasil: pesan kosong terlihat di layar', ev(
-    '(()=>{const r=document.getElementById("nir").getBoundingClientRect();'
-    'return r.top>=-2 && r.bottom<=innerHeight+2;})()'),
-    ev('(()=>{const r=document.getElementById("nir").getBoundingClientRect();'
-       'return [Math.round(r.top),Math.round(r.bottom),innerHeight];})()'))
-ev('document.getElementById("ulang").click()'); time.sleep(0.2)
-cek('tombol "Tampilkan semua" memulihkan 30 karya',
-    ketik('') == [30, 0] or ev('document.getElementById("ket").textContent') == '30 karya',
-    ev('document.getElementById("ket").textContent'))
-ketik('sensor'); time.sleep(0.2)
 ev('document.getElementById("bersih").click()'); time.sleep(0.2)
 cek('tombol bersih mengosongkan input', ev('document.getElementById("cari").value') == '')
-cek('tombol bersih memulihkan daftar', ev(
-    '[...document.querySelectorAll("#q1 .daftar li,#q2 .daftar li,#prosiding .daftar li")]'
-    '.filter(e=>!e.hidden).length') == 30)
 cek('fokus kembali ke kotak cari', ev('document.activeElement.id') == 'cari')
 ketik('sensor'); time.sleep(0.2)
 cmd('Input.dispatchKeyEvent', type='keyDown', key='Escape', code='Escape', windowsVirtualKeyCode=27)
@@ -227,6 +237,14 @@ cek('Escape mengosongkan pencarian', ev('document.getElementById("cari").value')
 buka('publikasi.html', 390)
 cek('390px kotak cari >= 44px', ev(
     'Math.round(document.getElementById("cari").getBoundingClientRect().height)') >= 44)
+ketik('nikel'); time.sleep(0.3)
+cek('390px: hasil menempel di bawah kotak cari', ev(
+    '(()=>{const h=document.getElementById("hasil").getBoundingClientRect();'
+    'const c=document.getElementById("cari").getBoundingClientRect();'
+    'return h.top>=c.bottom-2 && h.top<innerHeight-120})()'),
+    ev('(()=>{const h=document.getElementById("hasil").getBoundingClientRect();'
+       'const c=document.getElementById("cari").getBoundingClientRect();'
+       'return [Math.round(c.bottom),Math.round(h.top),innerHeight]})()'))
 
 print('\n=== RAHASIA DI FOLDER SITUS ===')
 # Pola generik: bentuk nominal rupiah dan bentuk nomor kontrak. Jangan pakai
