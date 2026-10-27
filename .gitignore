@@ -1,0 +1,17 @@
+.DS_Store
+Thumbs.db
+desktop.ini
+*.sebelum
+preview-*.jpg
+preview-*.png
+data.js.sebelum
+__pycache__/
+*.pyc
+
+# Data mentah DRH memuat nominal dana hibah dan nomor kontrak.
+# Letaknya di ../Profil-Ganjar-privat/data/ — DI LUAR folder situs, jadi
+# tidak mungkin ikut terunggah walau seluruh folder ini di-upload.
+# tools/ aman dilacak: hanya skrip, tanpa angka apa pun.
+data/
+*.docx
+*.bundle
