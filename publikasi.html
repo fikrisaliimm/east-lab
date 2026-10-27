@@ -217,7 +217,7 @@ function baris(w){
   const judul = w.d
     ? `<a href="https://doi.org/${esc(w.d)}" target="_blank" rel="noopener">${esc(w.j)}</a>`
     : esc(w.j);
-  return `<li data-cari="${esc((w.j+' '+w.p+' '+w.v+' '+w.t).toLowerCase())}">
+  return `<li>
     <span class="thn">${esc(w.t)}</span>
     <p class="p">${penulis(w.p)}</p>
     <p class="j">${judul}<span class="q">${esc(w.q)}</span></p>
@@ -247,39 +247,45 @@ const bersih = document.getElementById('bersih');
 const nir = document.getElementById('nir');
 const ulang = document.getElementById('ulang');
 
-const unik = () => document.querySelectorAll('.daftar li[data-cari]');
-const jmlSemua = () => unik().length;
+const karyaEl = () => document.querySelectorAll(
+  '#q1 .daftar li, #q2 .daftar li, #prosiding .daftar li');
+const kegEl = () => document.querySelectorAll('#pimpin .baris, #hibah .baris');
+const rapi = s => s.toLowerCase().replace(/\s+/g, ' ').trim();
 
-// indeks teks sekali saja: tanpa baca DOM berulang tiap ketikan
+/* Indeks dibangun dari teks yang benar-benar tampil, bukan dari kolom pilihan.
+   Tahun, kuartil, DOI, dan volume ikut terbaca tanpa perlu didaftar ulang. */
 let indeks = null;
-const siapkan = () => {
-  if (!indeks) indeks = [...unik()].map(li => ({ li, t: li.dataset.cari || '' }));
+function siapkan() {
+  if (indeks) return indeks;
+  indeks = [];
+  [...karyaEl()].forEach(el => indeks.push({ el, karya: true }));
+  [...kegEl()].forEach(el => indeks.push({ el, karya: false }));
+  indeks.forEach(o => { o.t = o.el.dataset.cari = rapi(o.el.textContent); });
   return indeks;
-};
+}
 
 function saring() {
-  const s = cari.value.trim().toLowerCase();
+  const s = rapi(cari.value);
+  const kata = s ? s.split(' ') : [];
   bersih.hidden = !s;
 
-  let tampil = 0;
-  siapkan().forEach(({ li, t }) => {
-    const cocok = !s || t.includes(s);
-    li.hidden = !cocok;
-    if (cocok) tampil++;
+  let nKarya = 0, nKeg = 0;
+  siapkan().forEach(({ el, t, karya }) => {
+    const cocok = !kata.length || kata.every(k => t.includes(k));
+    el.hidden = !cocok;
+    if (cocok) karya ? nKarya++ : nKeg++;
   });
 
-  // sembunyikan bagian tanpa hasil, termasuk judulnya
-  ['q1', 'q2', 'prosiding'].forEach(id => {
+  ['q1', 'q2', 'prosiding', 'pimpin', 'hibah'].forEach(id => {
     const sec = document.getElementById(id);
-    const n = sec.querySelectorAll('li[data-cari]:not([hidden])').length;
-    sec.hidden = n === 0;
+    sec.hidden = !!s && !sec.querySelector('[data-cari]:not([hidden])');
   });
-  // bagian tanpa data karya (riset, hibah) disembunyikan saat menyaring
-  ['pimpin', 'hibah'].forEach(id => { document.getElementById(id).hidden = !!s; });
 
-  nir.hidden = !s || tampil > 0;
-  ket.textContent = !s ? `${jmlSemua()} karya`
-    : tampil ? `${tampil} karya cocok` : '';
+  nir.hidden = !s || nKarya + nKeg > 0;
+  ket.textContent = !s ? `${karyaEl().length} karya`
+    : nKarya + nKeg ? [nKarya ? `${nKarya} karya` : '', nKeg ? `${nKeg} kegiatan` : '']
+        .filter(Boolean).join(' · ') + ' cocok'
+    : '';
 }
 
 let antre = 0;
@@ -295,7 +301,8 @@ document.addEventListener('keydown', e => {
     e.preventDefault(); cari.value = ''; saring();
   }
 });
-ket.textContent = `${jmlSemua()} karya`;
+siapkan();
+ket.textContent = `${karyaEl().length} karya`;
 </script>
 </body>
 </html>

@@ -165,6 +165,51 @@ for f, tanda in (('publikasi.html', '30'), ('profil.html', '27'), ('akses.html',
     sc = ev("document.documentElement.scrollWidth"); cw = ev("document.documentElement.clientWidth")
     cek(f'{f}: 360px tidak meluber', sc <= cw + 1, f'scroll={sc} client={cw}')
 
+print('\n=== PENCARIAN ===')
+buka('publikasi.html')
+def ketik(s):
+    ev('(()=>{const c=document.getElementById("cari");c.value=%s;'
+       'c.dispatchEvent(new Event("input",{bubbles:true}));})()' % json.dumps(s))
+    time.sleep(0.25)          # debounce 60 ms di halaman; beri ruang
+    return ev('(()=>{const li=[...document.querySelectorAll('
+              '"#q1 .daftar li,#q2 .daftar li,#prosiding .daftar li")];'
+              'const kg=[...document.querySelectorAll("#pimpin .baris,#hibah .baris")];'
+              'return [li.filter(e=>!e.hidden).length, kg.filter(e=>!e.hidden).length]})()')
+
+# tiap kunci: [harapan karya, harapan kegiatan]
+HARAP = {
+    'sensor': [11, 6], 'bisphenol': [6, 3], 'nikel': [0, 2], '2026': [8, 5],
+    'Q1': [24, 0], 'Q2': [3, 0], 'fadillah': [30, 0], 'air': [0, 6],
+    'mikroplastik': [0, 3], 'ion transfer': [0, 5], 'hibah': [0, 1],
+    'penelitian fundamental': [0, 4], 'kemitraan': [0, 0], 'xyz': [0, 0],
+}
+for k, (hk, hg) in HARAP.items():
+    hasil = ketik(k); time.sleep(0.25)
+    cek(f'cari "{k}" -> {hk} karya + {hg} kegiatan', hasil == [hk, hg], f'dapat {hasil}')
+
+ketik('xyz'); time.sleep(0.2)
+cek('tanpa hasil: pesan kosong tampil', ev('!document.getElementById("nir").hidden'))
+cek('tanpa hasil: hitungan dikosongkan', ev('document.getElementById("ket").textContent') == '')
+ev('document.getElementById("ulang").click()'); time.sleep(0.2)
+cek('tombol "Tampilkan semua" memulihkan 30 karya',
+    ketik('') == [30, 0] or ev('document.getElementById("ket").textContent') == '30 karya',
+    ev('document.getElementById("ket").textContent'))
+ketik('sensor'); time.sleep(0.2)
+ev('document.getElementById("bersih").click()'); time.sleep(0.2)
+cek('tombol bersih mengosongkan input', ev('document.getElementById("cari").value') == '')
+cek('tombol bersih memulihkan daftar', ev(
+    '[...document.querySelectorAll("#q1 .daftar li,#q2 .daftar li,#prosiding .daftar li")]'
+    '.filter(e=>!e.hidden).length') == 30)
+cek('fokus kembali ke kotak cari', ev('document.activeElement.id') == 'cari')
+ketik('sensor'); time.sleep(0.2)
+cmd('Input.dispatchKeyEvent', type='keyDown', key='Escape', code='Escape', windowsVirtualKeyCode=27)
+cmd('Input.dispatchKeyEvent', type='keyUp', key='Escape', code='Escape', windowsVirtualKeyCode=27)
+time.sleep(0.2)
+cek('Escape mengosongkan pencarian', ev('document.getElementById("cari").value') == '')
+buka('publikasi.html', 390)
+cek('390px kotak cari >= 44px', ev(
+    'Math.round(document.getElementById("cari").getBoundingClientRect().height)') >= 44)
+
 print('\n=== RAHASIA DI FOLDER SITUS ===')
 # Pola generik: bentuk nominal rupiah dan bentuk nomor kontrak. Jangan pakai
 # angka aslinya di sini — berkas ini ikut terunggah ke repo publik.
