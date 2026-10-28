@@ -110,9 +110,9 @@ cek('semua DOI sorotan ada di data.js',
 
 # feed
 n = ev("document.querySelectorAll('#feed li').length")
-cek('feed 11 baris (8 terbit + 3 rekognisi)', n == 11, n)
+cek('feed 10 baris (8 terbit + 2 rekognisi)', n == 10, n)
 cek('feed: 8 tautan DOI', ev("document.querySelectorAll('#feed a[href^=\"https://doi.org/\"]').length") == 8)
-cek('feed: 3 rekognisi', ev("document.querySelectorAll('#feed li.kegiatan').length") == 3)
+cek('feed: 2 rekognisi', ev("document.querySelectorAll('#feed li.kegiatan').length") == 2)
 
 # rahasia
 bad = ev("document.body.innerText.match(/\\d{1,3}\\.\\d{3}\\.\\d{3}/g)")
